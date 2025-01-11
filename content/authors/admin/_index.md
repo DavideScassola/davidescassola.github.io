@@ -82,8 +82,8 @@ work:
     company_name: Aindo SpA
     company_url: ''
     company_logo: ''
-    date_start: 'Present'
-    date_end: 2023-01-01
+    date_start:  2023-01-01
+    date_end: ''
   - position: Machine Learning Engineer
     company_name: Trality gmbh
     company_url: ''
