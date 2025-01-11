@@ -5,9 +5,9 @@ authors:
 - Sebastiano Saccani
 - Ginevra Carbone
 - Luca Bortolussi
-date: '2023-01-01'
+date: '2023'
 publishDate: '2025-01-11T11:18:50.918950Z'
 publication_types:
-- article-journal
+- preprint
 publication: '*arXiv preprint arXiv:2308.16534*'
 ---
