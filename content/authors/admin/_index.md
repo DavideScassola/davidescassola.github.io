@@ -79,11 +79,23 @@ education:
     #  - lorem ipsum dolor sit amet, consectetur adipiscing elit
 work:
   - position: Machine Learning Scientist
+    company_name: Aindo SpA
+    company_url: ''
+    company_logo: ''
+    date_start: 'Present'
+    date_end: 2023-01-01
+  - position: Machine Learning Engineer
     company_name: Trality gmbh
     company_url: ''
     company_logo: ''
     date_start: 2021-05-01
     date_end: 2023-01-01
+  - position: IT Analyst
+    company_name: Deloitte
+    company_url: ''
+    company_logo: ''
+    date_start: 2021-02-01
+    date_end: 2023-05-01
     #summary: |2-
     #  Responsibilities include:
     #  - lorem ipsum dolor sit amet, consectetur adipiscing elit
