@@ -36,7 +36,7 @@ profiles:
   - icon: brands/github
     url: https://github.com/DavideScassola
   - icon: brands/linkedin
-    url: https://www.linkedin.com/davide-scassola
+    url: https://www.linkedin.com/in/davide-scassola/
   - icon: academicons/google-scholar
     url: https://scholar.google.com/citations?user=Yp_MqnwAAAAJ&hl=it
 

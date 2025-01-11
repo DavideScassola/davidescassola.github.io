@@ -12,8 +12,6 @@ publication_types:
 publication: '*arXiv preprint arXiv:2308.16534*'
 
 links:
-- name: Custom Link
-  url: http://example.org
 url_pdf: 'https://arxiv.org/pdf/2308.16534'
 url_code: 'https://github.com/DavideScassola/score-based-constrained-generation'
 
