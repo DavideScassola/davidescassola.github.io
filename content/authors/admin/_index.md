@@ -157,4 +157,4 @@ languages:
 
 ## About Me
 
-I’m a PhD student of the ASDAI program at the University of Trieste in collaboration with AINDO. My research focuses on generative models and Bayesian inference, but I also have experience working with reinforcement learning, information theory, and the analysis of genomic data.
+I’m a PhD student at the University of Trieste in collaboration with AINDO. My research focuses on generative models, but I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
