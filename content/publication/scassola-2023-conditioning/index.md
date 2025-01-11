@@ -14,14 +14,14 @@ publication: '*arXiv preprint arXiv:2308.16534*'
 links:
 - name: Custom Link
   url: http://example.org
-url_pdf: http://arxiv.org/pdf/1512.04133v1
-url_code: 'https://github.com/HugoBlox/hugo-blox-builder'
-url_dataset: '#'
-url_poster: '#'
-url_project: ''
-url_slides: ''
-url_source: '#'
-url_video: '#'
+url_pdf: 'https://arxiv.org/pdf/2308.16534'
+url_code: 'https://github.com/DavideScassola/score-based-constrained-generation'
+# url_dataset: '#'
+# url_poster: '#'
+# url_project: ''
+# url_slides: ''
+# url_source: '#'
+# url_video: '#'
 
 #links:
 #url_pdf: https://arxiv.org/pdf/2308.16534
