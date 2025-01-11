@@ -16,12 +16,12 @@ links:
   url: http://example.org
 url_pdf: 'https://arxiv.org/pdf/2308.16534'
 url_code: 'https://github.com/DavideScassola/score-based-constrained-generation'
-# url_dataset: '#'
-# url_poster: '#'
-# url_project: ''
-# url_slides: ''
-# url_source: '#'
-# url_video: '#'
+url_dataset: '#'
+url_poster: '#'
+url_project: ''
+url_slides: ''
+url_source: '#'
+url_video: '#'
 
 #links:
 #url_pdf: https://arxiv.org/pdf/2308.16534
