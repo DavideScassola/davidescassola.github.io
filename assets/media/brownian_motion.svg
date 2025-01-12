@@ -1,0 +1,45 @@
+<svg id="canvas" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600" style="background-color: #1a1a1a;">
+  <!-- Particles will be added dynamically -->
+  <script type="application/ecmascript">
+    <![CDATA[
+      const svgNS = "http://www.w3.org/2000/svg";
+      const numParticles = 50;
+      const canvas = document.getElementById('canvas');
+      const pastelColors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
+
+      // Create particles
+      for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElementNS(svgNS, 'circle');
+        const size = Math.random() * 6 + 3; // Sizes between 3 and 9
+        const color = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+        particle.setAttribute('cx', Math.random() * canvas.clientWidth);
+        particle.setAttribute('cy', Math.random() * canvas.clientHeight);
+        particle.setAttribute('r', size);
+        particle.setAttribute('fill', color);
+        canvas.appendChild(particle);
+        animateParticle(particle);
+      }
+
+      function animateParticle(particle) {
+        let x = parseFloat(particle.getAttribute('cx'));
+        let y = parseFloat(particle.getAttribute('cy'));
+
+        // Random movement with smaller, smoother steps
+        x += (Math.random() - 0.5) * 5;
+        y += (Math.random() - 0.5) * 5;
+
+        // Boundary conditions with wrapping
+        if (x < 0) x = canvas.clientWidth;
+        if (x > canvas.clientWidth) x = 0;
+        if (y < 0) y = canvas.clientHeight;
+        if (y > canvas.clientHeight) y = 0;
+
+        particle.setAttribute('cx', x);
+        particle.setAttribute('cy', y);
+
+        // Smooth animation
+        setTimeout(() => animateParticle(particle), 50);
+      }
+    ]]>
+  </script>
+</svg>

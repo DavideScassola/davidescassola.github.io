@@ -24,9 +24,9 @@ sections:
         color: black
         image:
           # Add your image background to `assets/media/`.
-          filename: particles.svg
+          filename: pseudo_brownian_motion.svg
           filters:
-            brightness: 0.1
+            brightness: 0.15
           size: cover
           position: center
           parallax: false
