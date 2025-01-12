@@ -21,10 +21,10 @@ sections:
     design:
       css_class: dark
       background:
-        color: black
+        color: blue
         # image:
         #   # Add your image background to `assets/media/`.
-        #   filename: stacked-peaks.svg
+        #   filename: particles.svg
         #   filters:
         #     brightness: 1.0
         #   size: cover
