@@ -26,7 +26,7 @@ sections:
           # Add your image background to `assets/media/`.
           filename: particles.svg
           filters:
-            brightness: 1.0
+            brightness: 0.2
           size: cover
           position: center
           parallax: false
