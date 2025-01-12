@@ -169,4 +169,4 @@ work:
 
 ## About Me
 
-I’m a PhD student at the University of Trieste in collaboration with AINDO. My research focuses on generative models, but I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
+I’m a PhD student at the University of Trieste in collaboration with [AINDO](https://www.aindo.com/). My research focuses on generative models, but I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
