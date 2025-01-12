@@ -15,9 +15,9 @@ sections:
       username: admin
       text: ""
       # Show a call-to-action button under your biography? (optional)
-      button:
-        text: Download CV
-        url: uploads/resume.pdf
+      # button:
+      #   text: Download CV
+      #   url: uploads/resume.pdf
     design:
       css_class: dark
       background:
@@ -26,7 +26,7 @@ sections:
           # Add your image background to `assets/media/`.
           filename: particles.svg
           filters:
-            brightness: 0.2
+            brightness: 0.1
           size: cover
           position: center
           parallax: false
