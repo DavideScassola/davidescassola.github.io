@@ -6,7 +6,7 @@ authors:
 - Constantin Disselkamp
 - Davide Scassola
 - Christopher Helf
-date: '2024-01-01'
+date: '2023-01-01'
 publishDate: '2025-01-11T11:18:50.908974Z'
 publication_types:
 - article-journal
