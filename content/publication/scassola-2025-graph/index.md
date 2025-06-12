@@ -5,7 +5,7 @@ authors:
 - Sebastiano Saccani
 - Luca Bortolussi
 date: '2025-05-21'
-publishDate: '2025-05-21T11:18:50.918950Z'
+publishDate: '2025-01-11T11:18:50.908974Z'
 publication_types:
 - preprint
 publication: '*arXiv preprint arXiv:2308.16534*'
