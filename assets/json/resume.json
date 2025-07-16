@@ -1,70 +1,93 @@
 {
   "basics": {
-    "name": "Albert Einstein",
-    "label": "Scientist",
+    "name": "Davide Scassola",
+    "label": "PhD Student",
     "image": "",
-    "email": "albert@einstein.de",
-    "phone": "(912) 123-4567",
-    "url": "https://alshedivat.github.io/al-folio/",
-    "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
+    "email": "davide.scassola1@gmail.com",
+    "phone": " ",
+    "url": "https://davidescassola.github.io/",
+    "summary": "PhD candidate at the University of Trieste in collaboration with AINDO.",
     "location": {
-      "address": "2712 Broadway St",
-      "postalCode": "CA 94115",
-      "city": "San Francisco",
-      "countryCode": "US",
-      "region": "California"
+      "address": "Via Vrenda 40",
+      "postalCode": "25085",
+      "city": "Gavardo (BS)",
+      "countryCode": "IT",
+      "region": "Lombardia"
     },
     "profiles": [
       {
-        "network": "Twitter",
-        "username": "AlbertEinstein",
-        "url": "https://twitter.com/AlbertEinstein"
+        "network": "LinkedIn",
+        "username": "davide-scassola",
+        "url": "https://www.linkedin.com/in/davide-scassola/"
       }
     ]
   },
   "work": [
     {
-      "name": "Institute for Advanced Study, Princeton University",
-      "position": "Professor of Theoretical Physics",
-      "url": "https://example.com",
-      "startDate": "1933-01-01",
-      "endDate": "1955-01-01",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": ["Relativity"]
-    }
-  ],
-  "volunteer": [
+      "name": "Trality Gmbh",
+      "location": "Vienna, Austria",
+      "position": "R&D Scientist",
+      "url": "https://www.trality.com",
+      "startDate": "2021-05-01",
+      "endDate": "2022-12-31",
+      "summary": "Research and engineering for quantitative finance (cryptocurrencies).",
+      "highlights": ["development of ML pipeline", "Reinforcement learning research", "Trading strategies optimization", "Back-end development"]
+    },
     {
-      "organization": "People's Climate March",
-      "location": "Zurich, Switzerland",
-      "position": "Lead Organizer",
-      "url": "https://example.com",
-      "startDate": "2014-04-01",
-      "endDate": "2015-07-01",
-      "summary": "Lead organizer for the New York City branch of the People's Climate March, the largest climate march in history.",
-      "highlights": ["Awarded 'Climate Hero' award by Greenpeace for my efforts organizing the march.", "Men of the year 2014 by Time magazine"]
+      "name": "Deloitte Consulting",
+      "location": "Milan, Italy",
+      "position": "IT Analyst",
+      "url": "https://www.deloitte.com/it/it.html",
+      "startDate": "2021-02-01",
+      "endDate": "2022-04-30",
+      "summary": "Statistical analysis on datasets in the banking field, definition and implementation of automatic data quality controls, data governance solutions analysis in the banking field."
+    },
+    {
+      "name": "Aindo SpA",
+      "location": "Trieste, Italy",
+      "position": "Machine learning developer intern",
+      "url": "https://www.aindo.com",
+      "startDate": "2019-09-01",
+      "endDate": "2019-12-31",
+      "summary": "Development of a deep learning model able to generate multivariate financial time series simulating real dynamics and statistical properties.."
     }
   ],
   "education": [
     {
-      "institution": "University of Zurich, Zurich, Switzerland",
-      "location": "Zurich, Switzerland",
-      "url": "https://www.uzh.ch/",
-      "area": "Software Development",
+      "institution": "University of Trieste",
+      "location": "Trieste, Italy",
+      "url": "https://phd.units.it/en/dot21l8ayp",
+      "area": "Applied Data Science & Artificial Intelligence",
       "studyType": "PhD",
-      "startDate": "1905-01-01",
-      "endDate": "1905-01-01",
-      "score": "10",
-      "courses": ["Theory of Relativity"]
+      "startDate": "2023-01-01",
+      "endDate": "2025-12-31"
+    },
+    {
+      "institution": "University of Trieste, SISSA, ICTP",
+      "location": "Trieste, Italy",
+      "url": "https://dssc.units.it",
+      "area": "Data Science & Scientific Computing",
+      "studyType": "Master of Science",
+      "startDate": "2018-09-01",
+      "endDate": "2020-12-31",
+      "score": "110/110 cum laude"
+    },
+    {
+      "institution": "University of Brescia",
+      "location": "Brescia, Italy",
+      "url": "https://corsi.unibs.it/it/ingegneriainformatica",
+      "area": "Computer Science and Engineering",
+      "studyType": "Bachelor of Science",
+      "startDate": "2015-09-01",
+      "endDate": "2018-09-30"
     }
+    
   ],
   "awards": [
     {
-      "title": "Nobel Prize in Physics",
-      "date": "1921-11-01",
-      "awarder": "Royal Swedish Academy of Sciences",
-      "url": "https://www.nobelprize.org/prizes/physics/1921/einstein/biographical/",
-      "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
+      "title": "Fellowship at SISSA",
+      "date": "2018-09-01",
+      "awarder": "SISSA (International School for Advanced Studies)",
     }
   ],
   "certificates": [
@@ -151,7 +174,7 @@
   ],
   "languages": [
     {
-      "language": "German",
+      "language": "Italian",
       "fluency": "Native speaker",
       "icon": ""
     },
