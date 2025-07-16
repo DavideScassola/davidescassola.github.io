@@ -11,16 +11,9 @@
 - title: Education
   type: time_table
   contents:
-    - title: PhD
+    - title: Master's degree in Data Science & Scientific Computing
       institution: University of Trieste-SISSA-ICTP, Trieste, Italy
       year: 2018 - 2020
-      description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
     - title: Federal teaching diploma
       institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
       year: 1900
