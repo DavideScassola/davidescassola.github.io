@@ -22,7 +22,7 @@
       "url": "https://www.aindo.com",
       "position": "Research Scientist",
       "startDate": "2023-01-01",
-      "endDate": "current",
+      "endDate": "ongoing",
       "summary": "Researcher on generative models for synthetic data generation."
     },
     {
@@ -48,7 +48,7 @@
       "position": "PhD Student",
       "startDate": "2023-01-01",
       "endDate": "2025-12-31",
-      "summary": "PhD candidate in Applied Data Science & Artificial Intelligence. Research topic on generative models for tabular data generation."
+      "summary": "PhD candidate in Applied Data Science & Artificial Intelligence. Research topic on generative models for tabular data generation. Reviewer at AAAI26 conference."
     },
     {
       "name": "Deloitte Consulting",
@@ -208,7 +208,7 @@
     },
     {
       "language": "English",
-      "fluency": "Advanced (Score 8.0 IELTS Academic)"
+      "fluency": "Advanced (C1)"
     }
   ]
 }
