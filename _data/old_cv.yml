@@ -1,0 +1,117 @@
+- title: General Information
+  type: map
+  contents:
+    - name: Full Name
+      value: Davide Scassola
+    - name: Date of Birth
+      value: 18th October 1996
+    - name: Languages
+      value: English (C1), Italian (native)
+
+- title: Education
+  type: time_table
+  contents:
+    - title: Doctorate Degree in AI
+      institution: University of Trieste, Trieste, Italy
+      year: 01/2023 - 02/2026
+      description:
+          - "Thesis: Towards Flexible and Expressive Generative Models for Tabular and Relational Data"
+
+    - title: Master's degree in Data Science & Scientific Computing
+      institution: University of Trieste-SISSA-ICTP, Trieste, Italy
+      year: 09/2018 - 12/2020
+      description:
+         - "Thesis: An Information-Theoretic Investigation Into Epigenetic Regulation of Gene Expression"
+         - Advanced Programming and Algorithmic Design
+         - Numerical Analysis
+         - Probabilistic Machine Learning
+         - Foundations of High Performance Computing
+         - Probabilistic Machine Learning
+         - Stochastic Modelling and Simulation
+
+    - title: Bachelor's degree in Computer Science & Engineering
+      institution: University of Brescia, Brescia, Italy
+      year: 09/2015 - 09/2018
+
+
+
+
+
+- title: Experience
+  type: time_table
+  contents:
+
+    - title: Researcher in Artificial Intelligence
+      institution: Aindo SpA, Trieste, Italy
+      year: 01/2023 - now
+      description:
+        - Researcher on generative models for synthetic data generation.
+
+    - title: Visiting Researcher
+      institution: University of Edinburgh, Edinburgh, UK
+      year: 05/2025 - 10/2025
+
+    - title: Teaching Assistant
+      institution: University of Trieste, Trieste, Italy
+      year: 01/2024 - 06/2024
+      description:
+        - Teaching assistant for the Master's course in Probabilistic Machine Learning held by Luca Bortolussi
+    
+    - title: R&D Scientist
+      institution: Trality Gmbh, Vienna, Austria
+      year: 05/2021 - 12/2022
+      description:
+        - Research and engineering for quantitative finance
+        - Time series modeling (cryptocurrencies)
+        - Development of ML pipeline
+        - Reinforcement learning research
+        - Trading strategies optimization
+        - Implementation of statistical indicators and optimizers into production code
+        - Back-end development
+
+    - title: IT Analyst
+      institution: Deloitte Consulting, Milan, Italy
+      year: 02/2021 - 04/2021
+      description:
+      - Statistical analysis on datasets in the banking field
+      - Definition and implementation of automatic data quality controls
+      - Data governance solutions analysis in the banking field.
+
+    - title: Machine Learning Developer Intern
+      institution: Aindo SpA, Trieste, Italy
+      year: 09/2019 - 12/2019
+      description:
+        - Development of a deep learning model able to generate multivariate financial time series simulating real dynamics and statistical properties.
+
+    - title: Tutor
+      institution: Casa dello Studente, Brescia, Italy
+      year: 04/2018 - 06/2018
+      description:
+        - Tutor in Math, physics and computer science
+
+- title: Honors and Awards
+  type: time_table
+  contents:
+    - title: Excellence Scolarship for DSSC Students
+      institution: SISSA (International School for Advanced Studies), Trieste, Italy
+      year: 2018
+      description:
+        - The scholarship was awarded to 4 incoming students in the department. It covered housing expenses and provided a monthly stipend for the whole duration of the Master's Degree.
+
+# - title: Skills
+#   type: nested_list
+#   contents:
+#     - title: Topic 1.
+#       items:
+#         - Description 1.
+#         - Description 2.
+#     - title: Topic 2.
+#       items:
+#         - Description 1.
+#         - Description 2.
+
+- title: Languages
+  type: list
+  contents:
+    - <b>Italian:</b> Native
+    - <b>English:</b> Advanced (Score 8.0 IELTS Academic)
