@@ -142,6 +142,13 @@
   ],
   "publications": [
     {
+      "name": "A Sobering Look at Tabular Data Generation via Probabilistic Circuits",
+      "publisher": "Arxiv",
+      "releaseDate": "2026",
+      "url": "https://arxiv.org/abs/2603.23016",
+      "summary": "We develop a tabular data generation method using probabilistic circuits, which are tractable models allowing exact probabilistic queries. Moreover, we show the limitations of widely used evaluation metrics for tabular data generation and advocate for alternative approaches."
+    },
+    {
       "name": "Graph-Conditional Flow Matching for Relational Data Generation",
       "publisher": "AAAI",
       "releaseDate": "2026",
