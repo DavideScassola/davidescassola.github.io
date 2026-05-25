@@ -142,6 +142,13 @@
   ],
   "publications": [
     {
+      "name": "ReMIA: a Powerful and Efficient Alternative to Membership Inference Attacks against Synthetic Data Generators",
+      "publisher": "Arxiv",
+      "releaseDate": "2026",
+      "url": "https://arxiv.org/abs/2605.14686",
+      "summary": "We develop a practical privacy metric for synthetic data generators inspired by MIAs (Membership Inference Attacks) that is both data-efficient and computationally lightweight, while maintaining competitive sensitivity to privacy violations compared to existing methods."
+    },
+    {
       "name": "A Sobering Look at Tabular Data Generation via Probabilistic Circuits",
       "publisher": "Arxiv",
       "releaseDate": "2026",

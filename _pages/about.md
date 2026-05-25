@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: PhD Candidate in AI at University of Trieste
+subtitle: PhD Researcher in AI
 
 profile:
   align: left
@@ -24,4 +24,4 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I’m a PhD student at the University of Trieste in collaboration with [AINDO](https://www.aindo.com/). My research focuses on generative models, in particular for tabular and relational data. I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
+I’m a researcher in collaboration with [AINDO](https://www.aindo.com/). My research focuses on generative models, in particular for tabular and relational data. I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
