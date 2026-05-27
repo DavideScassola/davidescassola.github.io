@@ -1,3 +1,11 @@
+{% if page.citation_title %}
+  <meta name="citation_title" content="{{ page.citation_title }}">
+  <meta name="citation_author" content="{{ page.citation_author }}">
+  <meta name="citation_publication_date" content="{{ page.citation_publication_date }}">
+  <meta name="citation_dissertation_institution" content="{{ page.citation_dissertation_institution }}">
+  <meta name="citation_pdf_url" content="{{ page.citation_pdf_url }}">
+{% endif %}
+
 {% if site.enable_google_verification or site.enable_bing_verification %}
   <!-- Website verification -->
   {% if site.enable_google_verification %}
