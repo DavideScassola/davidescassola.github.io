@@ -15,32 +15,27 @@
       institution: University of Trieste, Trieste, Italy
       year: 01/2023 - 02/2026
       description:
-          - "Thesis: Towards Flexible and Expressive Generative Models for Tabular and Relational Data"
+        - "Thesis: Towards Flexible and Expressive Generative Models for Tabular and Relational Data"
 
     - title: Master's degree in Data Science & Scientific Computing
       institution: University of Trieste-SISSA-ICTP, Trieste, Italy
       year: 09/2018 - 12/2020
       description:
-         - "Thesis: An Information-Theoretic Investigation Into Epigenetic Regulation of Gene Expression"
-         - Advanced Programming and Algorithmic Design
-         - Numerical Analysis
-         - Probabilistic Machine Learning
-         - Foundations of High Performance Computing
-         - Probabilistic Machine Learning
-         - Stochastic Modelling and Simulation
+        - "Thesis: An Information-Theoretic Investigation Into Epigenetic Regulation of Gene Expression"
+        - Advanced Programming and Algorithmic Design
+        - Numerical Analysis
+        - Probabilistic Machine Learning
+        - Foundations of High Performance Computing
+        - Probabilistic Machine Learning
+        - Stochastic Modelling and Simulation
 
     - title: Bachelor's degree in Computer Science & Engineering
       institution: University of Brescia, Brescia, Italy
       year: 09/2015 - 09/2018
 
-
-
-
-
 - title: Experience
   type: time_table
   contents:
-
     - title: Researcher in Artificial Intelligence
       institution: Aindo SpA, Trieste, Italy
       year: 01/2023 - now
@@ -56,7 +51,7 @@
       year: 01/2024 - 06/2024
       description:
         - Teaching assistant for the Master's course in Probabilistic Machine Learning held by Luca Bortolussi
-    
+
     - title: R&D Scientist
       institution: Trality Gmbh, Vienna, Austria
       year: 05/2021 - 12/2022
@@ -73,9 +68,9 @@
       institution: Deloitte Consulting, Milan, Italy
       year: 02/2021 - 04/2021
       description:
-      - Statistical analysis on datasets in the banking field
-      - Definition and implementation of automatic data quality controls
-      - Data governance solutions analysis in the banking field.
+        - Statistical analysis on datasets in the banking field
+        - Definition and implementation of automatic data quality controls
+        - Data governance solutions analysis in the banking field.
 
     - title: Machine Learning Developer Intern
       institution: Aindo SpA, Trieste, Italy

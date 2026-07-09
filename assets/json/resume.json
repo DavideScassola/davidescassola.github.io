@@ -39,7 +39,12 @@
       "startDate": "2024-01-01",
       "endDate": "2024-06-30",
       "summary": "Teaching assistant for the Master's course in Probabilistic Machine Learning held by Luca Bortolussi.",
-      "highlights": ["Lecturing", "Correcting and writing course notes", "Preparing laboratories and exercitations", "Preparing and correcting homeworks"]
+      "highlights": [
+        "Lecturing",
+        "Correcting and writing course notes",
+        "Preparing laboratories and exercitations",
+        "Preparing and correcting homeworks"
+      ]
     },
     {
       "name": "University of Trieste",
@@ -123,7 +128,6 @@
       "startDate": "2015-09-01",
       "endDate": "2018-09-30"
     }
-    
   ],
   "awards": [
     {
@@ -177,7 +181,7 @@
       "summary": "We verify the reward generalization property of the proposed Multi-Objective algorithm on stock and cryptocurrency trading, and provides preliminary statistical evidence showing increased predictive stability over the corresponding Single-Objectives strategy."
     }
   ],
-"skills": [
+  "skills": [
     {
       "name": "Probabilistic Modelling & AI",
       "keywords": [
@@ -195,23 +199,12 @@
     },
     {
       "name": "Programming",
-      "keywords": [
-        "Python",
-        "C",
-        "C++",
-        "Java",
-        "SQL",
-        "R",
-        "Main Python Scientific Libraries (NumPy, Pandas, Scikit-learn, Matplotlib)"
-      ],
+      "keywords": ["Python", "C", "C++", "Java", "SQL", "R", "Main Python Scientific Libraries (NumPy, Pandas, Scikit-learn, Matplotlib)"],
       "summary": ""
     },
-        {
+    {
       "name": "Other Expertise",
-      "keywords": [
-        "Analysis of Genomic Data (basics)",
-        "Quantitative Finance (basics)"
-      ],
+      "keywords": ["Analysis of Genomic Data (basics)", "Quantitative Finance (basics)"],
       "summary": ""
     }
   ],
