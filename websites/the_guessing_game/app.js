@@ -148,16 +148,38 @@ function decodeSecretWord(encoded) {
   }
 }
 
-function getSharedWordFromUrl() {
+function getSharedDataFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const encoded = params.get("w");
-  return encoded ? decodeSecretWord(encoded) : "";
+  const encodedWord = params.get("w");
+  const encodedInfo = params.get("i");
+  const ql = params.get("ql");
+  const gl = params.get("gl");
+
+  return {
+    secretWord: encodedWord ? decodeSecretWord(encodedWord) : "",
+    additionalInfo: encodedInfo ? decodeSecretWord(encodedInfo) : "",
+    questionsLimit: ql ? parseInt(ql, 10) || 0 : 0,
+    guessesLimit: gl ? parseInt(gl, 10) || 0 : 0,
+  };
 }
 
-function buildShareUrl(word) {
+function buildShareUrl() {
   const url = new URL(window.location.href);
   url.search = "";
-  url.searchParams.set("w", encodeSecretWord(word));
+
+  if (state.secretWord) {
+    url.searchParams.set("w", encodeSecretWord(state.secretWord));
+  }
+  if (state.additionalInfo) {
+    url.searchParams.set("i", encodeSecretWord(state.additionalInfo));
+  }
+  if (state.questionsLimit > 0) {
+    url.searchParams.set("ql", state.questionsLimit);
+  }
+  if (state.guessesLimit > 0) {
+    url.searchParams.set("gl", state.guessesLimit);
+  }
+
   return url.toString();
 }
 
@@ -358,7 +380,7 @@ function submitGuess() {
 }
 
 async function shareGame() {
-  const shareUrl = buildShareUrl(state.secretWord);
+  const shareUrl = buildShareUrl();
   try {
     await navigator.clipboard.writeText(shareUrl);
     shareButton.textContent = "Link copied!";
@@ -403,11 +425,11 @@ function resetGameState() {
   renderGuessHistory();
 }
 
-function startGame(word) {
+function startGame(word, options = {}) {
   state.secretWord = word.trim();
-  state.additionalInfo = additionalInfoSetupInput.value.trim();
-  state.questionsLimit = parseInt(questionsLimitSetup.value) || 0;
-  state.guessesLimit = parseInt(guessesLimitSetup.value) || 0;
+  state.additionalInfo = options.additionalInfo ?? additionalInfoSetupInput.value.trim();
+  state.questionsLimit = options.questionsLimit ?? (parseInt(questionsLimitSetup.value) || 0);
+  state.guessesLimit = options.guessesLimit ?? (parseInt(guessesLimitSetup.value) || 0);
 
   resetGameState();
   setupScreen.classList.add("hidden");
@@ -419,11 +441,14 @@ function showSetupScreen() {
   gameScreen.classList.add("hidden");
   setupScreen.classList.remove("hidden");
 
-  const sharedWord = getSharedWordFromUrl();
-  if (sharedWord) {
+  const sharedData = getSharedDataFromUrl();
+  if (sharedData.secretWord) {
     setupDefault.classList.add("hidden");
     setupShared.classList.remove("hidden");
-    state.secretWord = sharedWord;
+    state.secretWord = sharedData.secretWord;
+    state.additionalInfo = sharedData.additionalInfo;
+    state.questionsLimit = sharedData.questionsLimit;
+    state.guessesLimit = sharedData.guessesLimit;
   } else {
     setupShared.classList.add("hidden");
     setupDefault.classList.remove("hidden");
@@ -486,7 +511,11 @@ startButton.addEventListener("click", () => {
 });
 
 startSharedButton.addEventListener("click", () => {
-  startGame(state.secretWord);
+  startGame(state.secretWord, {
+    additionalInfo: state.additionalInfo,
+    questionsLimit: state.questionsLimit,
+    guessesLimit: state.guessesLimit,
+  });
 });
 
 secretWordSetupInput.addEventListener("keydown", (event) => {
