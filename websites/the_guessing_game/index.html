@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Guessing Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>"
+    />
+  </head>
+  <body>
+    <div class="bg-glow bg-glow-left" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-right" aria-hidden="true"></div>
+
+    <main class="container">
+      <header class="hero">
+        <p class="eyebrow"></p>
+        <h1>The Guessing Game</h1>
+        <p class="subtitle">
+          Ask yes/no questions about a secret word. The game returns a probability of the answer being
+          <strong>yes</strong>.
+        </p>
+      </header>
+
+      <!-- SETUP SCREEN -->
+      <section id="setupScreen" class="panel setup" aria-label="Game Setup">
+        <div id="setupDefault">
+          <h2>Game Setup</h2>
+
+          <div class="actions-row mb-1">
+            <button id="toggleCustomWordButton" type="button" class="button-ghost">Use Custom Secret Word</button>
+          </div>
+
+          <div id="customWordContainer" class="field-row hidden">
+            <label for="secretWordSetup">Secret word</label>
+            <input id="secretWordSetup" type="text" placeholder="Type a word" autocomplete="off" />
+          </div>
+
+          <h3>Advanced Options</h3>
+          <div class="field-row">
+            <label for="additionalInfoSetup">Additional Info / Description (Optional)</label>
+            <input
+              id="additionalInfoSetup"
+              type="text"
+              placeholder="Example: the nocturnal animal, not the piece of wood or metal used to hit a ball in baseball."
+              autocomplete="off"
+            />
+          </div>
+          <div class="field-row">
+            <label for="questionsLimitSetup">Questions Limit (0 for no limit)</label>
+            <input id="questionsLimitSetup" type="number" min="0" value="0" />
+          </div>
+          <div class="field-row">
+            <label for="guessesLimitSetup">Guesses Limit (0 for no limit)</label>
+            <input id="guessesLimitSetup" type="number" min="0" value="0" />
+          </div>
+
+          <div class="actions-row mt-1">
+            <button id="startButton" type="button">Start Game</button>
+          </div>
+        </div>
+
+        <div id="setupShared" class="hidden">
+          <h2>A friend sent you a secret word</h2>
+          <p class="subtitle">The word is hidden. Start asking yes/no questions to figure it out.</p>
+          <div class="actions-row">
+            <button id="startSharedButton" type="button">Start Guessing</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME SCREEN -->
+      <section id="gameScreen" class="hidden">
+        <div class="panel top-bar">
+          <div class="top-bar-stats">
+            <span id="statsDisplay">Questions: 0 | Guesses: 0</span>
+          </div>
+          <div class="top-bar-actions">
+            <button id="giveUpButton" type="button" class="button-ghost">Give Up</button>
+            <button id="shareButton" type="button" class="button-ghost">Share this game</button>
+            <button id="restartButton" type="button" class="button-ghost">New game</button>
+          </div>
+        </div>
+
+        <!-- GAME OVER SECTION -->
+        <section id="gameOverSection" class="panel result hidden" aria-live="polite">
+          <h2 id="gameOverTitle">Game Over</h2>
+          <p id="gameOverMessage" class="explanation"></p>
+          <p class="probability is-yes" id="revealedWord"></p>
+        </section>
+
+        <!-- ASK SECTION -->
+        <section id="askSection" class="panel controls" aria-label="Game controls">
+          <div class="field-row">
+            <label for="questionInput">Ask a Question <span id="questionsLeftText"></span></label>
+            <div class="question-row">
+              <input id="questionInput" type="text" placeholder="Example: Is it a living thing?" autocomplete="off" />
+              <button id="askButton" type="button">Ask</button>
+            </div>
+          </div>
+
+          <!-- Latest Result is now BELOW the question input -->
+          <div id="latestResultArea" class="latest-result hidden mt-1">
+            <div class="result-row">
+              <span class="label">Last Question:</span>
+              <span id="lastQuestionText" class="value text-main"></span>
+            </div>
+            <div class="result-row">
+              <span class="label">Answer:</span>
+              <span id="lastAnswerText" class="value probability-small"></span>
+            </div>
+            <p id="resultExplanation" class="explanation"></p>
+          </div>
+        </section>
+
+        <!-- GUESS SECTION -->
+        <section id="guessSection" class="panel guess" aria-label="Make a guess">
+          <h2>Ready to guess?</h2>
+          <div class="field-row">
+            <label for="guessInput">Your guess <span id="guessesLeftText"></span></label>
+            <div class="question-row">
+              <input id="guessInput" type="text" placeholder="Type the secret word" autocomplete="off" />
+              <button id="guessButton" type="button">Guess</button>
+            </div>
+          </div>
+          <p id="guessMessage" class="guess-message"></p>
+        </section>
+
+        <!-- HISTORY SECTION -->
+        <section class="panel history" aria-label="Question history">
+          <h2>Questions History</h2>
+          <ul id="historyList"></ul>
+        </section>
+
+        <section class="panel history" aria-label="Guess history">
+          <h2>Guesses History</h2>
+          <ul id="guessHistoryList"></ul>
+        </section>
+      </section>
+
+      <footer>&copy; <a href="https://davidescassola.github.io" target="_blank">Davide Scassola, 2026</a></footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

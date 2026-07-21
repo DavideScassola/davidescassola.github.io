@@ -1,0 +1,1 @@
+Guessing game where the player has to guess a secret word asking yes/no questions to an AI.
