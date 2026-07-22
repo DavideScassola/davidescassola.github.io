@@ -8,6 +8,7 @@
   --accent-strong: #ff9dbf;
   --ok: #5aa890;
   --bad: #d66f8d;
+  --unsure: #d4af37; /* Ocher/gold for unsure state */
 }
 
 * {
@@ -171,7 +172,6 @@ button:disabled {
   flex-wrap: wrap;
 }
 
-/* Latest result embedded in asking panel */
 .latest-result {
   background: rgba(245, 247, 255, 0.6);
   border-radius: 12px;
@@ -218,6 +218,10 @@ button:disabled {
 .is-no,
 .text-bad {
   color: var(--bad);
+}
+.is-unsure,
+.text-unsure {
+  color: var(--unsure);
 }
 
 .explanation {

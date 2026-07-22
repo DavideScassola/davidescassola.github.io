@@ -41,7 +41,7 @@ const RANDOM_WORDS = [
   "octopus",
   "jellyfish",
   "risotto",
-  "exagon",
+  "hexagon",
   "oak",
   "blood",
   "fear",
@@ -229,15 +229,39 @@ async function askModel(question, secretWord, additionalInfo) {
   return data;
 }
 
+function formatAnswer(yesProb) {
+  const pct = `${Math.round(yesProb * 100)}%`;
+  const distance = Math.abs(yesProb - 0.5);
+
+  if (distance <= 0.1) {
+    return {
+      text: `Unsure (${pct})`,
+      className: "is-unsure",
+      historyClass: "text-unsure",
+    };
+  } else if (yesProb >= 0.5) {
+    return {
+      text: `Yes (${pct})`,
+      className: "is-yes",
+      historyClass: "text-ok",
+    };
+  } else {
+    return {
+      text: `No (${pct})`,
+      className: "is-no",
+      historyClass: "text-bad",
+    };
+  }
+}
+
 function renderResult(question, yesProb) {
   latestResultArea.classList.remove("hidden");
   lastQuestionText.textContent = question;
 
-  const pct = `${Math.round(yesProb * 100)}%`;
-  const isYes = yesProb >= 0.5;
+  const formatted = formatAnswer(yesProb);
 
-  lastAnswerText.textContent = isYes ? `Yes (${pct})` : `No (${pct})`;
-  lastAnswerText.className = `value probability-small ${isYes ? "is-yes" : "is-no"}`;
+  lastAnswerText.textContent = formatted.text;
+  lastAnswerText.className = `value probability-small ${formatted.className}`;
   resultExplanation.textContent = "";
 }
 
@@ -255,10 +279,10 @@ function renderHistory() {
     question.className = "history-question";
     question.textContent = entry.question;
 
-    const pct = `${Math.round(entry.yesProb * 100)}%`;
+    const formatted = formatAnswer(entry.yesProb);
     const meta = document.createElement("p");
-    meta.className = `history-meta ${entry.yesProb >= 0.5 ? "text-ok" : "text-bad"}`;
-    meta.textContent = entry.yesProb >= 0.5 ? `Yes (${pct})` : `No (${pct})`;
+    meta.className = `history-meta ${formatted.historyClass}`;
+    meta.textContent = formatted.text;
 
     li.append(question, meta);
     historyList.appendChild(li);
