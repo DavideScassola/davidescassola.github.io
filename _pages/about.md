@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: PhD Researcher in AI
+subtitle: Applied Scientist, PhD in AI
 
 profile:
   align: left
@@ -24,4 +24,5 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I’m a researcher in collaboration with [AINDO](https://www.aindo.com/). My research focuses on generative models, in particular for tabular and relational data. I'm also interested in Bayesian methods, causality and probabilistic machine learning in general.
+I'm an applied scientist with a PhD in AI and a background in computer science, mathematics, and statistics.
+I'm experienced in developing and training machine learning models from scratch, with publications on generative AI in top-tier venues. My research focused mainly on generative models, in particular for tabular and relational data, but I'm also interested in Bayesian methods, causality and probabilistic machine learning in general. My industry experience spans software engineering, probabilistic modeling, and research.
