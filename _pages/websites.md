@@ -13,3 +13,11 @@ Guessing game where the player has to guess a secret word asking yes/no question
 [Open →]({{ '/websites/the_guessing_game/' | relative_url }})
 
 ---
+
+## [The Scale]({{ '/websites/the_scale/' | relative_url }})
+
+Tool for building rankings about anything.
+
+[Open →]({{ '/websites/the_scale/' | relative_url }})
+
+---
