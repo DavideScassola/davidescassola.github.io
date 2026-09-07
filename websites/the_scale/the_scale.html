@@ -1,0 +1,2056 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Scale — rank anything by weighing pairs</title>
+    <meta name="description" content="Drop in a list, weigh two things at a time, or place them manually." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #182726;
+        --bg-soft: #1f302e;
+        --surface: #eae2cb;
+        --surface-dim: #cfc6a8;
+        --ink: #f3eedc;
+        --ink-dim: #9fb0a9;
+        --ink-dark: #22201a;
+        --brass: #c9a227;
+        --brass-bright: #e4c24e;
+        --wine: #7a3b32;
+        --line: rgba(243, 238, 220, 0.12);
+        --danger: #d97a6c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 18% -8%, #24413d 0%, transparent 45%), var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        line-height: 1.55;
+        min-height: 100vh;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", serif;
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      p {
+        margin: 0 0 1rem;
+      }
+      button,
+      select {
+        font: inherit;
+      }
+
+      /* ---------- header ---------- */
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        background: rgba(24, 39, 38, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .topbar-inner {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0.95rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.25rem;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        color: var(--brass-bright);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+      }
+      .brand svg {
+        display: block;
+        flex-shrink: 0;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .progress-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .progress-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        color: var(--ink-dim);
+        white-space: nowrap;
+      }
+      .progress-track {
+        width: 100px;
+        height: 4px;
+        background: rgba(243, 238, 220, 0.15);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--brass-bright);
+        transition: width 300ms ease;
+      }
+
+      /* ---------- shell / screens ---------- */
+      .app-shell {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+      }
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+        animation: screenIn 360ms ease;
+      }
+      @keyframes screenIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ---------- setup ---------- */
+      .setup-hero {
+        padding-top: 2rem;
+      }
+      .setup-hero h1 {
+        font-size: clamp(2rem, 5vw, 2.7rem);
+      }
+      .setup-hero .lede {
+        color: var(--ink-dim);
+        font-size: 1.05rem;
+        max-width: 46ch;
+      }
+      .field-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        display: block;
+        margin: 2rem 0 0.6rem;
+      }
+      input.title-input {
+        width: 100%;
+        padding: 0.8rem 1.1rem;
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+      }
+      input.title-input::placeholder {
+        color: var(--ink-dim);
+        opacity: 0.7;
+      }
+      input.title-input:focus {
+        outline: none;
+        border-color: var(--brass);
+      }
+
+      textarea#itemsInput {
+        width: 100%;
+        min-height: 180px;
+        resize: vertical;
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        padding: 1rem 1.1rem;
+      }
+      textarea#itemsInput::placeholder {
+        color: var(--ink-dim);
+        opacity: 0.7;
+      }
+      textarea#itemsInput:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--brass);
+      }
+
+      select#algoSelect {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--ink);
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .setup-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.65rem;
+      }
+      #itemCount {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        color: var(--ink-dim);
+      }
+      .link-btn {
+        background: none;
+        border: none;
+        color: var(--brass-bright);
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 0;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .link-btn:hover {
+        color: var(--brass);
+      }
+      .setup-error {
+        color: var(--danger);
+        font-size: 0.88rem;
+        min-height: 1.2em;
+        margin-top: 0.9rem;
+      }
+      .setup-actions {
+        margin-top: 1.75rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      /* ---------- buttons ---------- */
+      .btn {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 0.92rem;
+        letter-spacing: 0.01em;
+        padding: 0.85rem 1.7rem;
+        border-radius: 999px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition:
+          transform 160ms ease,
+          background 160ms ease,
+          border-color 160ms ease,
+          color 160ms ease,
+          opacity 160ms ease;
+      }
+      .btn-sm {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.78rem;
+      }
+      .btn-primary {
+        background: var(--brass);
+        color: #1b1704;
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--brass-bright);
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: transparent;
+        border-color: var(--line);
+        color: var(--ink);
+      }
+      .btn-ghost:hover:not(:disabled) {
+        border-color: var(--brass);
+        color: var(--brass-bright);
+      }
+      .btn:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+      }
+
+      /* ---------- compare screen ---------- */
+      .compare-head {
+        padding-top: 2rem;
+        text-align: center;
+      }
+      .compare-head h2 {
+        font-size: 1.1rem;
+        color: var(--ink-dim);
+        font-weight: 500;
+        font-family: "Inter", sans-serif;
+      }
+
+      .scale-stage {
+        margin-top: 1.75rem;
+        text-align: center;
+      }
+      .pivot-stand {
+        width: 0;
+        height: 0;
+        margin: -2px auto 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 26px solid var(--brass);
+      }
+      .beam {
+        width: min(320px, 78%);
+        height: 6px;
+        margin: 0 auto;
+        position: relative;
+        background: linear-gradient(180deg, var(--brass-bright), var(--brass));
+        border-radius: 3px;
+        transform-origin: 50% 50%;
+        transition: transform 380ms cubic-bezier(0.34, 1.15, 0.4, 1);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+      }
+      .beam::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--brass-bright);
+        transform: translate(-50%, -50%);
+        box-shadow:
+          0 0 0 4px var(--bg),
+          0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+      .beam.tilt-left {
+        transform: rotate(-7deg);
+      }
+      .beam.tilt-right {
+        transform: rotate(7deg);
+      }
+
+      .pans-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 1.25rem;
+        margin-top: 1.6rem;
+      }
+      .pan {
+        flex: 1;
+        max-width: 250px;
+        min-width: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: inherit;
+      }
+      .pan::before {
+        content: "";
+        width: 2px;
+        height: 24px;
+        background: var(--brass);
+        opacity: 0.55;
+      }
+      .pan-card {
+        margin-top: 0.2rem;
+        width: 100%;
+        min-height: 92px;
+        padding: 1.15rem 1rem;
+        background: var(--surface);
+        color: var(--ink-dark);
+        border-radius: 8px 8px 18px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: "Fraunces", serif;
+        font-size: 1.12rem;
+        font-weight: 600;
+        word-break: break-word;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+        border: 2px solid transparent;
+        transition:
+          transform 380ms cubic-bezier(0.34, 1.15, 0.4, 1),
+          box-shadow 380ms ease,
+          border-color 160ms ease;
+      }
+      .pan:hover .pan-card,
+      .pan:focus-visible .pan-card {
+        border-color: var(--brass-bright);
+      }
+      .pan.dip .pan-card {
+        transform: translateY(16px);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.4);
+      }
+      .pan.rise .pan-card {
+        transform: translateY(-10px);
+      }
+      .vs-mark {
+        align-self: center;
+        padding-top: 2.6rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        color: var(--ink-dim);
+        user-select: none;
+      }
+      .compare-hint {
+        text-align: center;
+        color: var(--ink-dim);
+        font-size: 0.9rem;
+        margin-top: 2rem;
+      }
+      .action-row {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- insertion screen ---------- */
+      .insertion-container {
+        position: relative;
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 180px; /* Clear the fixed header + item-to-place card */
+        padding-bottom: 90px; /* Offset for fixed bottom action bar */
+      }
+      .active-card-wrap {
+        position: fixed;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 15;
+        background: var(--bg);
+        border: 2px solid var(--brass);
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        width: calc(100% - 2rem);
+        max-width: 380px;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      }
+      .active-card-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--brass-bright);
+        margin-bottom: 0.2rem;
+      }
+      .active-card-text {
+        font-family: "Fraunces", serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .insertion-actions-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 15;
+        background: rgba(24, 39, 38, 0.95);
+        backdrop-filter: blur(8px);
+        padding: 0.85rem 1rem;
+        border-top: 1px solid var(--line);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .vertical-line {
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .insertion-slot {
+        width: 100%;
+        height: 36px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+      .insertion-slot::before {
+        content: "";
+        width: 80%;
+        height: 2px;
+        background: var(--line);
+        transition:
+          background 180ms ease,
+          height 180ms ease;
+      }
+      .insertion-slot:hover::before,
+      .insertion-slot:focus::before {
+        background: var(--brass-bright);
+        height: 4px;
+      }
+      .insertion-slot:hover::after,
+      .insertion-slot:focus::after {
+        content: "Insert Here";
+        position: absolute;
+        background: var(--brass-bright);
+        color: var(--bg);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 10px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .insertion-ranked-row {
+        width: 100%;
+        position: relative;
+      }
+      .insertion-rank {
+        position: absolute;
+        right: calc(100% + 0.7rem);
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2.4rem;
+        text-align: right;
+        font-family: "Fraunces", serif;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--brass-bright);
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+      }
+      .ranked-card {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        background: var(--surface);
+        color: var(--ink-dark);
+        border-radius: 8px;
+        text-align: center;
+        font-family: "Fraunces", serif;
+        font-size: 1rem;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition:
+          transform 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease;
+        border: 2px solid transparent;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+      }
+      .ranked-card.has-score {
+        justify-content: space-between;
+      }
+      .ranked-card .rc-text {
+        word-break: break-word;
+      }
+      .ranked-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--brass-bright);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      .ranked-card::after {
+        content: "Click to move";
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.6rem;
+        color: var(--ink-dark);
+        opacity: 0;
+        transition: opacity 160ms ease;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .ranked-card:hover::after {
+        opacity: 0.6;
+      }
+      .ranked-card.has-score::after {
+        content: none;
+      }
+
+      /* ---------- live list ---------- */
+      .live-list-wrap {
+        margin-top: 2.5rem;
+      }
+      .live-list-wrap h3 {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      #liveList {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 320px;
+        overflow-y: auto;
+        border-top: 1px solid var(--line);
+      }
+      .live-item {
+        display: flex;
+        align-items: baseline;
+        gap: 0.85rem;
+        padding: 0.55rem 0.3rem;
+        border-bottom: 1px solid var(--line);
+        transition: background 260ms ease;
+      }
+      .live-item .rank {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--ink-dim);
+        width: 1.7rem;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .live-item .text {
+        font-size: 0.95rem;
+      }
+      .live-item.active {
+        background: rgba(201, 162, 39, 0.14);
+      }
+      .live-item.active .rank {
+        color: var(--brass-bright);
+      }
+
+      /* ---------- scores ---------- */
+      .score-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-left: auto;
+        flex-shrink: 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        color: var(--ink-dim);
+      }
+      .score-value {
+        background: rgba(201, 162, 39, 0.14);
+        border: 1px solid var(--line);
+        color: var(--brass-bright);
+        border-radius: 6px;
+        padding: 0.15rem 0.5rem;
+        cursor: pointer;
+        font: inherit;
+        line-height: 1.3;
+        transition:
+          border-color 140ms ease,
+          background 140ms ease;
+      }
+      .score-value:hover {
+        border-color: var(--brass-bright);
+        background: rgba(201, 162, 39, 0.22);
+      }
+      .score-value.is-anchor {
+        border-color: var(--brass-bright);
+        background: rgba(201, 162, 39, 0.28);
+        color: var(--brass-bright);
+        font-weight: 600;
+      }
+      .score-pct {
+        color: var(--ink-dim);
+        font-size: 0.72rem;
+      }
+      .score-input {
+        width: 4.2rem;
+        padding: 0.15rem 0.4rem;
+        background: var(--bg-soft);
+        border: 1px solid var(--brass-bright);
+        border-radius: 6px;
+        color: var(--ink);
+        font: inherit;
+      }
+      .score-clear {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.4rem;
+        height: 1.4rem;
+        padding: 0;
+        border-radius: 50%;
+        background: rgba(217, 122, 108, 0.16);
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        font-size: 0.68rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .score-clear:hover {
+        background: rgba(217, 122, 108, 0.3);
+      }
+      .ranked-card .score-badge {
+        color: rgba(34, 32, 26, 0.6);
+      }
+      .ranked-card .score-value {
+        background: rgba(34, 32, 26, 0.08);
+        border-color: rgba(34, 32, 26, 0.18);
+        color: var(--ink-dark);
+      }
+      .ranked-card .score-value:hover {
+        background: rgba(34, 32, 26, 0.15);
+      }
+      .ranked-card .score-value.is-anchor {
+        background: rgba(122, 59, 50, 0.18);
+        border-color: var(--wine);
+        color: var(--wine);
+      }
+      .ranked-card .score-input {
+        background: #fff;
+        border-color: var(--wine);
+        color: var(--ink-dark);
+      }
+
+      /* ---------- results ---------- */
+      .results-head {
+        padding-top: 1.5rem;
+      }
+      #resultsTitle {
+        font-size: clamp(1.8rem, 4vw, 2.3rem);
+      }
+      #resultsList {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0 2.25rem;
+      }
+      .result-item {
+        display: flex;
+        align-items: baseline;
+        gap: 1.1rem;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--line);
+        opacity: 0;
+        transform: translateY(8px);
+        animation: resultIn 420ms ease forwards;
+      }
+      @keyframes resultIn {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .result-item .rank {
+        font-family: "Fraunces", serif;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--brass-bright);
+        width: 2.4rem;
+        flex-shrink: 0;
+      }
+      .result-item .text {
+        font-size: 1.08rem;
+      }
+      .results-actions {
+        display: flex;
+        gap: 0.85rem;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 480px) {
+        .pans-row {
+          gap: 0.75rem;
+        }
+        .vs-mark {
+          padding-top: 2.2rem;
+          font-size: 0.65rem;
+        }
+        .setup-hero {
+          padding-top: 2rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .screen.active {
+          animation: none;
+        }
+        .beam,
+        .pan-card {
+          transition: none;
+        }
+        .result-item {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <svg width="22" height="15" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6">
+            <line x1="12" y1="2" x2="12" y2="6" />
+            <line x1="2" y1="6" x2="22" y2="6" />
+            <line x1="4" y1="6" x2="4" y2="7.6" />
+            <line x1="20" y1="6" x2="20" y2="7.6" />
+            <circle cx="4" cy="11" r="3.4" />
+            <circle cx="20" cy="11" r="3.4" />
+          </svg>
+          <span>THE&nbsp;SCALE</span>
+        </div>
+
+        <div class="header-actions">
+          <div class="progress-info" id="progressInfo" hidden>
+            <span class="progress-label" id="progressLabel"></span>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="toggleScoresBtn" style="display: none" aria-pressed="false">Show scores</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="globalHomeBtn" style="display: none">Home</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <!-- SETUP -->
+      <main id="screen-setup" class="screen active">
+        <div class="setup-hero">
+          <h1>Rank anything.</h1>
+          <p class="lede">Drop in a list. Build a ranking by comparing items.</p>
+        </div>
+
+        <label class="field-label" for="rankingTitle">Title</label>
+        <input type="text" id="rankingTitle" class="title-input" placeholder="e.g., Best activities to do with friends" />
+
+        <label class="field-label" for="itemsInput">Items to be ranked</label>
+        <textarea id="itemsInput" placeholder="Hiking a new trail&#10;Reading a novel&#10;Cooking something new&#10;A lazy movie night"></textarea>
+        <div class="setup-meta">
+          <span id="itemCount">0 items</span>
+          <button type="button" class="link-btn" id="loadExample">Try an example</button>
+        </div>
+
+        <label class="field-label" for="algoSelect">Sorting Method</label>
+        <select id="algoSelect">
+          <option value="manual_insertion">Insertion Mode</option>
+          <option value="fj">Comparison Mode: Ford-Johnson Algorithm</option>
+          <option value="timsort">Comparison Mode: Timsort</option>
+        </select>
+
+        <p class="setup-error" id="setupError" aria-live="polite"></p>
+
+        <div class="setup-actions">
+          <button type="button" class="btn btn-primary" id="beginBtn" disabled>Begin weighing →</button>
+          <button type="button" class="btn btn-ghost" id="shareLinkBtn">🔗 Share as Link</button>
+          <button type="button" class="btn btn-ghost" id="setupLoadFileBtn">📂 Load</button>
+          <input type="file" id="fileInput" accept=".json" style="display: none" />
+        </div>
+      </main>
+
+      <!-- COMPARE SCREEN (Pairwise Mode) -->
+      <main id="screen-compare" class="screen">
+        <div class="compare-head">
+          <h2>Which one ranks higher?</h2>
+        </div>
+
+        <div class="scale-stage">
+          <div class="beam" id="beam"></div>
+          <div class="pivot-stand"></div>
+          <div class="pans-row">
+            <button type="button" class="pan" id="panLeft" aria-label="Choose the left item">
+              <div class="pan-card"><span id="panLeftText"></span></div>
+            </button>
+            <span class="vs-mark">or</span>
+            <button type="button" class="pan" id="panRight" aria-label="Choose the right item">
+              <div class="pan-card"><span id="panRightText"></span></div>
+            </button>
+          </div>
+        </div>
+
+        <p class="compare-hint">Click a pan, or press ← / → to choose.</p>
+
+        <div class="action-row">
+          <button type="button" class="btn btn-ghost" id="undoBtn" disabled>Undo last weighing</button>
+          <button type="button" class="btn btn-ghost" id="saveSessionBtn">💾 Export Progress</button>
+        </div>
+
+        <div class="live-list-wrap">
+          <h3>Current order</h3>
+          <ol id="liveList"></ol>
+        </div>
+      </main>
+
+      <!-- INSERTION SCREEN (Manual Placement Mode) -->
+      <main id="screen-insertion" class="screen">
+        <div class="insertion-container">
+          <div class="active-card-wrap">
+            <div class="active-card-label">Item to place</div>
+            <div class="active-card-text" id="insertionActiveText"></div>
+          </div>
+
+          <div class="vertical-line" id="verticalLine"></div>
+
+          <div class="insertion-actions-fixed">
+            <button type="button" class="btn btn-ghost" id="passInsertionBtn">Pass (do later)</button>
+            <button type="button" class="btn btn-ghost" id="undoInsertionBtn" disabled>Undo last placement</button>
+            <button type="button" class="btn btn-ghost" id="saveSessionBtnInsertion">💾 Export Progress</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- RESULTS -->
+      <main id="screen-results" class="screen">
+        <div class="results-head">
+          <h1 id="resultsTitle">Your ranking</h1>
+        </div>
+        <ol id="resultsList"></ol>
+        <div class="results-actions">
+          <button type="button" class="btn btn-primary" id="copyNumberedBtn">Copy with numbers</button>
+          <button type="button" class="btn btn-primary" id="copyUnnumberedBtn">Copy without numbers</button>
+          <button type="button" class="btn btn-ghost" id="restartBtn">Start over</button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const state = {
+          mode: "fj",
+          originalItems: [],
+          items: [],
+          decisions: [],
+          gen: null,
+          current: null,
+          locked: false,
+
+          // Manual Insertion Mode State
+          pendingItems: [],
+          rankedItems: [],
+          currentInsertionItem: null,
+          insertionHistory: [],
+
+          // Scores
+          showScores: false,
+          scoreAnchors: {}, // itemId -> numeric score explicitly set by the user
+
+          // Visual order shown mid-sort on the compare screen
+          displayOrder: [],
+        };
+
+        const screens = {
+          setup: document.getElementById("screen-setup"),
+          compare: document.getElementById("screen-compare"),
+          insertion: document.getElementById("screen-insertion"),
+          results: document.getElementById("screen-results"),
+        };
+
+        const rankingTitleEl = document.getElementById("rankingTitle");
+        const itemsInput = document.getElementById("itemsInput");
+        const algoSelect = document.getElementById("algoSelect");
+        const itemCountEl = document.getElementById("itemCount");
+        const beginBtn = document.getElementById("beginBtn");
+        const setupError = document.getElementById("setupError");
+        const loadExampleBtn = document.getElementById("loadExample");
+        const shareLinkBtn = document.getElementById("shareLinkBtn");
+
+        const progressInfo = document.getElementById("progressInfo");
+        const progressLabel = document.getElementById("progressLabel");
+        const progressFill = document.getElementById("progressFill");
+        const globalHomeBtn = document.getElementById("globalHomeBtn");
+        const toggleScoresBtn = document.getElementById("toggleScoresBtn");
+
+        const beamEl = document.getElementById("beam");
+        const panLeftEl = document.getElementById("panLeft");
+        const panRightEl = document.getElementById("panRight");
+        const panLeftText = document.getElementById("panLeftText");
+        const panRightText = document.getElementById("panRightText");
+        const undoBtn = document.getElementById("undoBtn");
+        const liveListEl = document.getElementById("liveList");
+
+        const insertionActiveText = document.getElementById("insertionActiveText");
+        const verticalLine = document.getElementById("verticalLine");
+        const undoInsertionBtn = document.getElementById("undoInsertionBtn");
+        const passInsertionBtn = document.getElementById("passInsertionBtn");
+
+        const saveSessionBtn = document.getElementById("saveSessionBtn");
+        const saveSessionBtnInsertion = document.getElementById("saveSessionBtnInsertion");
+        const setupLoadFileBtn = document.getElementById("setupLoadFileBtn");
+        const fileInput = document.getElementById("fileInput");
+
+        const resultsTitle = document.getElementById("resultsTitle");
+        const resultsList = document.getElementById("resultsList");
+        const copyNumberedBtn = document.getElementById("copyNumberedBtn");
+        const copyUnnumberedBtn = document.getElementById("copyUnnumberedBtn");
+        const restartBtn = document.getElementById("restartBtn");
+
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const ANIM_MS = reduceMotion ? 0 : 420;
+
+        const EXAMPLE = [
+          "Hiking a new trail",
+          "Reading a novel",
+          "Cooking something new",
+          "A lazy movie night",
+          "Visiting a museum",
+          "Board game night with friends",
+          "Trying a new restaurant",
+          "A day at the beach",
+        ];
+
+        // ---------- Shareable Link Functionality ----------
+        shareLinkBtn.addEventListener("click", () => {
+          const params = new URLSearchParams({
+            title: rankingTitleEl.value,
+            items: itemsInput.value,
+            algo: algoSelect.value,
+          });
+          const shareUrl = window.location.origin + window.location.pathname + "?" + params.toString();
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            const originalText = shareLinkBtn.textContent;
+            shareLinkBtn.textContent = "Copied link!";
+            setTimeout(() => (shareLinkBtn.textContent = originalText), 2000);
+          });
+        });
+
+        window.addEventListener("DOMContentLoaded", () => {
+          const params = new URLSearchParams(window.location.search);
+          if (params.has("items")) {
+            itemsInput.value = params.get("items");
+            updateItemCount();
+          }
+          if (params.has("title")) {
+            rankingTitleEl.value = params.get("title");
+          }
+          if (params.has("algo")) {
+            algoSelect.value = params.get("algo");
+          }
+        });
+
+        // ---------- Save / Load File Functionality ----------
+        function serializeState() {
+          const payload = {
+            title: rankingTitleEl.value,
+            mode: state.mode,
+            originalItems: state.originalItems.map((i) => i.text),
+          };
+
+          if (state.mode === "manual_insertion") {
+            payload.rankedItems = state.rankedItems.map((i) => i.text);
+            payload.pendingItems = state.pendingItems.map((i) => i.text);
+            payload.currentInsertionItem = state.currentInsertionItem ? state.currentInsertionItem.text : null;
+          } else {
+            payload.decisions = state.decisions;
+          }
+
+          const anchorsByText = {};
+          Object.keys(state.scoreAnchors).forEach((id) => {
+            const item = state.originalItems.find((i) => i.id === id);
+            if (item) anchorsByText[item.text] = state.scoreAnchors[id];
+          });
+          payload.scoreAnchors = anchorsByText;
+
+          return JSON.stringify(payload, null, 2);
+        }
+
+        function saveToFile() {
+          const jsonStr = serializeState();
+          const blob = new Blob([jsonStr], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `scale-ranking-save-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+
+        function loadStateFromData(data) {
+          state.mode = data.mode || "fj";
+          rankingTitleEl.value = data.title || "";
+          algoSelect.value = state.mode;
+
+          const makeItem = (text, idx) => ({
+            id: "i" + idx + "-" + Math.random().toString(36).slice(2, 8),
+            text,
+          });
+
+          if (data.originalItems && data.originalItems.length > 0) {
+            state.originalItems = data.originalItems.map((t, idx) => makeItem(t, idx));
+          } else if (data.items && data.items.length > 0) {
+            state.originalItems = data.items.map((t, idx) => makeItem(t, idx));
+          }
+
+          state.scoreAnchors = {};
+          state.showScores = false;
+          toggleScoresBtn.textContent = "Show scores";
+          toggleScoresBtn.setAttribute("aria-pressed", "false");
+          if (data.scoreAnchors) {
+            Object.entries(data.scoreAnchors).forEach(([text, score]) => {
+              const match = state.originalItems.find((i) => i.text === text);
+              if (match) state.scoreAnchors[match.id] = score;
+            });
+          }
+
+          if (state.mode === "manual_insertion") {
+            const findOrCreate = (txt) => {
+              if (!txt) return null;
+              let found = state.originalItems.find((i) => i.text === txt);
+              return found ? { ...found } : makeItem(txt, Math.random());
+            };
+
+            if (data.rankedItems) {
+              state.rankedItems = data.rankedItems.map((t) => findOrCreate(t));
+            } else {
+              state.rankedItems = [state.originalItems[0]];
+            }
+
+            if (data.pendingItems) {
+              state.pendingItems = data.pendingItems.map((t) => findOrCreate(t));
+            } else {
+              const rankedTexts = new Set(state.rankedItems.map((i) => i.text));
+              state.pendingItems = state.originalItems.filter((i) => !rankedTexts.has(i.text));
+            }
+
+            if (data.currentInsertionItem !== undefined) {
+              state.currentInsertionItem = data.currentInsertionItem ? findOrCreate(data.currentInsertionItem) : null;
+            } else {
+              state.currentInsertionItem = null;
+            }
+
+            state.insertionHistory = [];
+            showScreen("insertion");
+            nextInsertionStep();
+          } else {
+            state.decisions = data.decisions || [];
+            liveListEl.innerHTML = "";
+            buildGenerator();
+            for (const d of state.decisions) {
+              const pair = state.current.value;
+              recordDecisionSwap(pair, d);
+              state.current = state.gen.next(d);
+            }
+            showScreen("compare");
+            renderCompareContent();
+            renderLiveList(null);
+          }
+        }
+
+        saveSessionBtn.addEventListener("click", saveToFile);
+        saveSessionBtnInsertion.addEventListener("click", saveToFile);
+
+        setupLoadFileBtn.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            try {
+              const data = JSON.parse(evt.target.result);
+              if (!data || (!data.items && !data.originalItems)) {
+                throw new Error("Invalid file structure");
+              }
+              loadStateFromData(data);
+            } catch (err) {
+              alert("Invalid or corrupted save file.");
+            }
+          };
+          reader.readAsText(file);
+        });
+
+        function swap(arr, i, j) {
+          const t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+
+        // ---------- Timsort Generator ----------
+        function* timsortGen(items) {
+          const RUN = 4;
+          const n = items.length;
+
+          for (let i = 0; i < n; i += RUN) {
+            let right = Math.min(i + RUN - 1, n - 1);
+            for (let j = i + 1; j <= right; j++) {
+              let k = j;
+              while (k > i) {
+                let choice = yield { a: k - 1, b: k };
+                if (choice === "b") {
+                  swap(items, k, k - 1);
+                  k--;
+                } else {
+                  break;
+                }
+              }
+            }
+          }
+
+          for (let size = RUN; size < n; size = 2 * size) {
+            for (let left = 0; left < n; left += 2 * size) {
+              let mid = left + size - 1;
+              let right = Math.min(left + 2 * size - 1, n - 1);
+              if (mid < right) {
+                yield* mergeRuns(items, left, mid, right);
+              }
+            }
+          }
+        }
+
+        function* mergeRuns(items, left, mid, right) {
+          let leftArr = items.slice(left, mid + 1);
+          let rightArr = items.slice(mid + 1, right + 1);
+
+          let i = 0,
+            j = 0,
+            k = left;
+
+          while (i < leftArr.length && j < rightArr.length) {
+            let origLeftIdx = left + i;
+            let origRightIdx = mid + 1 + j;
+
+            let choice = yield { a: origLeftIdx, b: origRightIdx };
+
+            if (choice === "a") {
+              items[k] = leftArr[i];
+              i++;
+            } else {
+              items[k] = rightArr[j];
+              j++;
+            }
+            k++;
+          }
+
+          while (i < leftArr.length) {
+            items[k] = leftArr[i];
+            i++;
+            k++;
+          }
+          while (j < rightArr.length) {
+            items[k] = rightArr[j];
+            j++;
+            k++;
+          }
+        }
+
+        // ---------- Ford-Johnson Generator ----------
+        const jacobsthal = [1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461, 10923, 21845, 43691];
+
+        function* fjSort(arr) {
+          if (arr.length < 2) return arr;
+
+          let pairs = [];
+          let n = arr.length;
+          for (let i = 0; i < Math.floor(n / 2); i++) {
+            let x = arr[2 * i];
+            let y = arr[2 * i + 1];
+            let choice = yield { a: x, b: y };
+            if (choice === "a") {
+              pairs.push({ smaller: x, larger: y });
+            } else {
+              pairs.push({ smaller: y, larger: x });
+            }
+          }
+          let unpaired = n % 2 !== 0 ? arr[n - 1] : null;
+
+          let largers = pairs.map((p) => p.larger);
+          let sortedLargers = yield* fjSort(largers);
+
+          let smallers = sortedLargers.map((a) => pairs.find((p) => p.larger === a).smaller);
+          let mainChain = [smallers[0], ...sortedLargers];
+
+          let order = [];
+          let lastJ = 1;
+          let jIdx = 1;
+          let numSmallers = smallers.length;
+
+          if (unpaired !== null) {
+            smallers.push(unpaired);
+            numSmallers++;
+          }
+
+          while (lastJ < numSmallers) {
+            let currJ = jacobsthal[jIdx];
+            let maxBound = Math.min(currJ, numSmallers);
+            for (let i = maxBound; i > lastJ; i--) {
+              order.push(i - 1);
+            }
+            lastJ = currJ;
+            jIdx++;
+          }
+
+          for (let i of order) {
+            let item = smallers[i];
+            let maxIdx = unpaired !== null && i === smallers.length - 1 ? mainChain.length : mainChain.indexOf(sortedLargers[i]);
+
+            let low = 0;
+            let high = maxIdx - 1;
+            while (low <= high) {
+              let mid = Math.floor((low + high) / 2);
+              let choice = yield { a: item, b: mainChain[mid] };
+              if (choice === "a") {
+                high = mid - 1;
+              } else {
+                low = mid + 1;
+              }
+            }
+            mainChain.splice(low, 0, item);
+          }
+          return mainChain;
+        }
+
+        function* fordJohnsonMainGen(items, lo, hi) {
+          let indices = [];
+          for (let i = lo; i <= hi; i++) indices.push(i);
+          let sortedIndices = yield* fjSort(indices);
+          let originalItems = [...items];
+          for (let i = 0; i < sortedIndices.length; i++) {
+            items[lo + i] = originalItems[sortedIndices[i]];
+          }
+        }
+
+        // ---------- Scores ----------
+        function computeScores(orderedItems) {
+          const n = orderedItems.length;
+          if (n === 0) return [];
+
+          const hasAnchor = (id) => Object.prototype.hasOwnProperty.call(state.scoreAnchors, id);
+
+          if (n === 1) {
+            const item = orderedItems[0];
+            const isExplicit = hasAnchor(item.id);
+            const score = isExplicit ? state.scoreAnchors[item.id] : 10;
+            return [{ item, score, percentile: 100, isAnchor: isExplicit }];
+          }
+
+          let anchors = [];
+          orderedItems.forEach((item, idx) => {
+            if (hasAnchor(item.id)) anchors.push({ idx, score: state.scoreAnchors[item.id] });
+          });
+
+          if (!anchors.some((a) => a.idx === 0)) anchors.push({ idx: 0, score: 10 });
+          if (!anchors.some((a) => a.idx === n - 1)) anchors.push({ idx: n - 1, score: 0 });
+          anchors.sort((a, b) => a.idx - b.idx);
+
+          function interpolate(idx) {
+            let lower = anchors[0],
+              upper = anchors[anchors.length - 1];
+            for (let i = 0; i < anchors.length - 1; i++) {
+              if (anchors[i].idx <= idx && anchors[i + 1].idx >= idx) {
+                lower = anchors[i];
+                upper = anchors[i + 1];
+                break;
+              }
+            }
+            if (lower.idx === upper.idx) return lower.score;
+            const t = (idx - lower.idx) / (upper.idx - lower.idx);
+            return lower.score + t * (upper.score - lower.score);
+          }
+
+          return orderedItems.map((item, idx) => {
+            const isExplicit = hasAnchor(item.id);
+            const score = isExplicit ? state.scoreAnchors[item.id] : idx === 0 ? 10 : idx === n - 1 ? 0 : interpolate(idx);
+            const percentile = Math.round((100 * (n - idx)) / n);
+            return { item, score, percentile, isAnchor: isExplicit };
+          });
+        }
+
+        function buildScoreMap(orderedItems) {
+          const map = new Map();
+          computeScores(orderedItems).forEach((d) => map.set(d.item.id, d));
+          return map;
+        }
+
+        function formatScore(v) {
+          const r = Math.round(v * 10) / 10;
+          return Number.isInteger(r) ? r.toFixed(0) : r.toFixed(1);
+        }
+
+        function getAnchorBounds(orderedItems, item) {
+          const idx = orderedItems.findIndex((i) => i.id === item.id);
+          const n = orderedItems.length;
+          const hasAnchor = (id) => Object.prototype.hasOwnProperty.call(state.scoreAnchors, id);
+
+          let candidates = [];
+          orderedItems.forEach((it, i) => {
+            if (i !== idx && hasAnchor(it.id)) candidates.push({ idx: i, score: state.scoreAnchors[it.id] });
+          });
+          if (idx !== 0 && !candidates.some((a) => a.idx === 0)) candidates.push({ idx: 0, score: 10 });
+          if (idx !== n - 1 && !candidates.some((a) => a.idx === n - 1)) candidates.push({ idx: n - 1, score: 0 });
+
+          let above = null,
+            below = null;
+          candidates.forEach((a) => {
+            if (a.idx < idx && (above === null || a.idx > above.idx)) above = a;
+            if (a.idx > idx && (below === null || a.idx < below.idx)) below = a;
+          });
+
+          let max = above ? above.score : null;
+          let min = below ? below.score : null;
+          if (max !== null && min !== null && min > max) {
+            min = null;
+          }
+          return { min, max };
+        }
+
+        function upsertScoreBadge(el, item, scoreData, orderedItems) {
+          let badge = el.querySelector(".score-badge");
+          if (!scoreData) {
+            if (badge) badge.remove();
+            el.classList.remove("has-score");
+            return;
+          }
+          el.classList.add("has-score");
+          if (!badge) {
+            badge = document.createElement("span");
+            badge.className = "score-badge";
+            el.appendChild(badge);
+          }
+          if (badge.dataset.editing === "1") return;
+
+          badge.innerHTML = "";
+          const valBtn = document.createElement("button");
+          valBtn.type = "button";
+          valBtn.className = "score-value" + (scoreData.isAnchor ? " is-anchor" : "");
+          valBtn.textContent = formatScore(scoreData.score);
+          valBtn.title = scoreData.isAnchor ? "Locked score — click to edit" : "Interpolated score — click to lock/edit";
+          valBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            startEditScore(badge, item, scoreData.score, scoreData.isAnchor, orderedItems);
+          });
+
+          const pct = document.createElement("span");
+          pct.className = "score-pct";
+          pct.textContent = "(" + scoreData.percentile + "%)";
+
+          badge.appendChild(valBtn);
+          badge.appendChild(pct);
+        }
+
+        function startEditScore(badge, item, currentScore, isAnchor, orderedItems) {
+          const bounds = getAnchorBounds(orderedItems, item);
+
+          badge.dataset.editing = "1";
+          badge.innerHTML = "";
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = "0.1";
+          input.className = "score-input";
+          input.value = formatScore(currentScore);
+          if (bounds.min !== null) input.min = bounds.min;
+          if (bounds.max !== null) input.max = bounds.max;
+          const rangeHint =
+            bounds.min !== null || bounds.max !== null
+              ? `Allowed range: ${bounds.min !== null ? formatScore(bounds.min) : "−∞"} to ${bounds.max !== null ? formatScore(bounds.max) : "+∞"}`
+              : "Any value";
+          input.title = rangeHint;
+          badge.appendChild(input);
+
+          let settled = false;
+
+          if (isAnchor) {
+            const clearBtn = document.createElement("button");
+            clearBtn.type = "button";
+            clearBtn.className = "score-clear";
+            clearBtn.title = "Remove this anchor";
+            clearBtn.textContent = "✕";
+
+            const clearHandler = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (settled) return;
+              settled = true;
+              delete state.scoreAnchors[item.id];
+              badge.dataset.editing = "0";
+              refreshScoreDisplays();
+            };
+
+            clearBtn.addEventListener("mousedown", clearHandler);
+            clearBtn.addEventListener("touchstart", clearHandler, { passive: false });
+            badge.appendChild(clearBtn);
+          }
+
+          input.focus();
+          input.select();
+
+          function commit() {
+            if (settled) return;
+            settled = true;
+            const raw = input.value.trim();
+            if (raw === "") {
+              delete state.scoreAnchors[item.id];
+            } else {
+              let val = parseFloat(raw);
+              if (!isNaN(val)) {
+                if (bounds.max !== null && val > bounds.max) val = bounds.max;
+                if (bounds.min !== null && val < bounds.min) val = bounds.min;
+                state.scoreAnchors[item.id] = val;
+              }
+            }
+            badge.dataset.editing = "0";
+            refreshScoreDisplays();
+          }
+
+          function cancel() {
+            if (settled) return;
+            settled = true;
+            badge.dataset.editing = "0";
+            refreshScoreDisplays();
+          }
+
+          input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commit();
+            } else if (e.key === "Escape") {
+              e.preventDefault();
+              cancel();
+            }
+          });
+          input.addEventListener("blur", commit);
+          input.addEventListener("click", (e) => e.stopPropagation());
+        }
+
+        function updateAllScoreBadges(container, itemSelector, orderedItems) {
+          const scoreMap = state.showScores ? buildScoreMap(orderedItems) : null;
+          container.querySelectorAll(itemSelector).forEach((el) => {
+            const id = el.dataset.id;
+            const item = orderedItems.find((i) => i.id === id);
+            if (!item) {
+              upsertScoreBadge(el, null, null, orderedItems);
+              return;
+            }
+            upsertScoreBadge(el, item, scoreMap ? scoreMap.get(id) : null, orderedItems);
+          });
+        }
+
+        function getCompareDisplayItems() {
+          return state.displayOrder.map((id) => state.items.find((i) => i.id === id)).filter(Boolean);
+        }
+
+        function refreshScoreDisplays() {
+          if (screens.compare.classList.contains("active")) {
+            updateAllScoreBadges(liveListEl, ".live-item", getCompareDisplayItems());
+          } else if (screens.insertion.classList.contains("active")) {
+            updateAllScoreBadges(verticalLine, ".ranked-card", state.rankedItems);
+          } else if (screens.results.classList.contains("active")) {
+            updateAllScoreBadges(resultsList, ".result-item", state.items);
+          }
+        }
+
+        toggleScoresBtn.addEventListener("click", () => {
+          state.showScores = !state.showScores;
+          toggleScoresBtn.textContent = state.showScores ? "Hide scores" : "Show scores";
+          toggleScoresBtn.setAttribute("aria-pressed", state.showScores ? "true" : "false");
+          refreshScoreDisplays();
+        });
+
+        // ---------- Navigation & Setup ----------
+        function parseItems() {
+          return itemsInput.value
+            .split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean)
+            .map((text, idx) => ({ id: "i" + idx + "-" + Math.random().toString(36).slice(2, 8), text }));
+        }
+
+        function updateItemCount() {
+          const n = itemsInput.value
+            .split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean).length;
+          itemCountEl.textContent = n === 1 ? "1 item" : n + " items";
+          beginBtn.disabled = n < 2;
+          if (n >= 2) setupError.textContent = "";
+        }
+        itemsInput.addEventListener("input", updateItemCount);
+
+        loadExampleBtn.addEventListener("click", () => {
+          itemsInput.value = EXAMPLE.join("\n");
+          updateItemCount();
+          itemsInput.focus();
+        });
+
+        function showScreen(name) {
+          Object.entries(screens).forEach(([k, el]) => el.classList.toggle("active", k === name));
+
+          const isSortingActive = name === "compare" || name === "insertion";
+          progressInfo.hidden = !isSortingActive;
+          globalHomeBtn.style.display = name === "setup" ? "none" : "inline-block";
+          toggleScoresBtn.style.display = name === "setup" ? "none" : "inline-block";
+        }
+
+        function resetProgress() {
+          progressFill.style.width = "0%";
+          progressLabel.textContent = "";
+        }
+
+        globalHomeBtn.addEventListener("click", () => {
+          resetProgress();
+          showScreen("setup");
+        });
+
+        beginBtn.addEventListener("click", () => {
+          const parsed = parseItems();
+          if (parsed.length < 2) {
+            setupError.textContent = "Add at least two things to compare.";
+            return;
+          }
+          setupError.textContent = "";
+          state.originalItems = parsed;
+          state.mode = algoSelect.value;
+          state.scoreAnchors = {};
+          state.showScores = false;
+          toggleScoresBtn.textContent = "Show scores";
+          toggleScoresBtn.setAttribute("aria-pressed", "false");
+
+          // Reset Insertion Mode state for fresh runs
+          state.rankedItems = [];
+          state.pendingItems = [];
+          state.currentInsertionItem = null;
+          state.insertionHistory = [];
+
+          if (state.mode === "manual_insertion") {
+            startManualInsertionMode();
+          } else {
+            state.decisions = [];
+            liveListEl.innerHTML = "";
+            buildGenerator();
+            showScreen("compare");
+            renderCompareContent();
+            renderLiveList(null);
+          }
+        });
+
+        function buildGenerator() {
+          state.items = state.originalItems.map((x) => ({ ...x }));
+          state.displayOrder = state.items.map((i) => i.id);
+          if (state.mode === "fj") {
+            state.gen = fordJohnsonMainGen(state.items, 0, state.items.length - 1);
+          } else {
+            state.gen = timsortGen(state.items);
+          }
+          state.current = state.gen.next();
+        }
+
+        // ---------- Progress Estimator ----------
+        function updateProgress() {
+          const n = state.originalItems.length;
+
+          if (state.mode === "manual_insertion") {
+            const totalToPlace = n - 1;
+            const remaining = state.pendingItems.length + (state.currentInsertionItem ? 1 : 0);
+            const placed = totalToPlace - remaining;
+
+            if (remaining <= 0) {
+              progressLabel.textContent = "";
+              progressFill.style.width = "100%";
+              return;
+            }
+
+            progressLabel.textContent = `${placed} placed, ${remaining} remaining`;
+            const pct = Math.round((placed / totalToPlace) * 100);
+            progressFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+          } else {
+            const done = state.decisions.length;
+            let totalExpected = Math.round(n * Math.log2(n));
+
+            if (state.mode === "fj") {
+              totalExpected = Math.max(1, Math.round(n * Math.log2(n) - 1.3 * n));
+            }
+
+            const left = Math.max(0, totalExpected - done);
+
+            if (state.current && state.current.done) {
+              progressLabel.textContent = "";
+              progressFill.style.width = "100%";
+              return;
+            }
+
+            progressLabel.textContent = `${done} comparisons done, ~${left} left`;
+
+            const pct = Math.round((done / totalExpected) * 100);
+            progressFill.style.width = Math.max(0, Math.min(99, pct)) + "%";
+          }
+        }
+
+        // ---------- Compare Mode Logic ----------
+        function captureListRects() {
+          const map = new Map();
+          liveListEl.querySelectorAll(".live-item").forEach((el) => map.set(el.dataset.id, el.getBoundingClientRect()));
+          return map;
+        }
+
+        function flip(oldRects) {
+          if (!oldRects || reduceMotion) return;
+          [...liveListEl.children].forEach((el) => {
+            const oldRect = oldRects.get(el.dataset.id);
+            if (!oldRect) return;
+            const newRect = el.getBoundingClientRect();
+            const dy = oldRect.top - newRect.top;
+            if (Math.abs(dy) > 0.5) {
+              el.style.transition = "none";
+              el.style.transform = `translateY(${dy}px)`;
+              requestAnimationFrame(() => {
+                el.style.transition = "transform 420ms cubic-bezier(.2,.8,.2,1)";
+                el.style.transform = "";
+              });
+            }
+          });
+        }
+
+        function recordDecisionSwap(pair, side) {
+          const winnerIdx = side === "a" ? pair.a : pair.b;
+          const loserIdx = side === "a" ? pair.b : pair.a;
+          const winnerId = state.items[winnerIdx].id;
+          const loserId = state.items[loserIdx].id;
+          const wPos = state.displayOrder.indexOf(winnerId);
+          const lPos = state.displayOrder.indexOf(loserId);
+          if (wPos !== -1 && lPos !== -1 && wPos > lPos) {
+            const tmp = state.displayOrder[wPos];
+            state.displayOrder[wPos] = state.displayOrder[lPos];
+            state.displayOrder[lPos] = tmp;
+          }
+        }
+
+        function renderLiveList(oldRects) {
+          const activeIds =
+            state.current && !state.current.done ? [state.items[state.current.value.a].id, state.items[state.current.value.b].id] : [];
+          const displayItems = getCompareDisplayItems();
+          displayItems.forEach((item, idx) => {
+            let el = liveListEl.querySelector('[data-id="' + item.id + '"]');
+            if (!el) {
+              el = document.createElement("li");
+              el.className = "live-item";
+              el.dataset.id = item.id;
+              el.innerHTML = '<span class="rank"></span><span class="text"></span>';
+              liveListEl.appendChild(el);
+            }
+            el.querySelector(".rank").textContent = idx + 1;
+            el.querySelector(".text").textContent = item.text;
+            el.classList.toggle("active", activeIds.indexOf(item.id) !== -1);
+            liveListEl.appendChild(el);
+          });
+          flip(oldRects);
+          refreshScoreDisplays();
+        }
+
+        function renderCompareContent() {
+          if (!state.current || state.current.done) return;
+          const { a, b } = state.current.value;
+          panLeftText.textContent = state.items[a].text;
+          panRightText.textContent = state.items[b].text;
+
+          updateProgress();
+          undoBtn.disabled = state.decisions.length === 0;
+        }
+
+        function choose(side) {
+          if (state.locked || !state.current || state.current.done) return;
+          state.locked = true;
+
+          beamEl.classList.add(side === "a" ? "tilt-left" : "tilt-right");
+          (side === "a" ? panLeftEl : panRightEl).classList.add("dip");
+          (side === "a" ? panRightEl : panLeftEl).classList.add("rise");
+
+          setTimeout(() => {
+            const oldRects = captureListRects();
+            const pair = state.current.value;
+            recordDecisionSwap(pair, side);
+            state.decisions.push(side);
+            state.current = state.gen.next(side);
+
+            beamEl.classList.remove("tilt-left", "tilt-right");
+            panLeftEl.classList.remove("dip", "rise");
+            panRightEl.classList.remove("dip", "rise");
+
+            if (state.current.done) {
+              progressLabel.textContent = "";
+              progressFill.style.width = "100%";
+              renderLiveList(oldRects);
+              setTimeout(finishSorting, reduceMotion ? 0 : 260);
+            } else {
+              renderCompareContent();
+              renderLiveList(oldRects);
+              state.locked = false;
+            }
+          }, ANIM_MS);
+        }
+
+        panLeftEl.addEventListener("click", () => choose("a"));
+        panRightEl.addEventListener("click", () => choose("b"));
+
+        document.addEventListener("keydown", (e) => {
+          if (!screens.compare.classList.contains("active")) return;
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            choose("a");
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            choose("b");
+          }
+        });
+
+        undoBtn.addEventListener("click", () => {
+          if (state.decisions.length === 0) return;
+          const oldRects = captureListRects();
+          state.decisions.pop();
+          buildGenerator();
+          for (const d of state.decisions) {
+            const pair = state.current.value;
+            recordDecisionSwap(pair, d);
+            state.current = state.gen.next(d);
+          }
+          renderCompareContent();
+          renderLiveList(oldRects);
+        });
+
+        // ---------- Manual Insertion Mode Logic ----------
+        function startManualInsertionMode() {
+          if (state.rankedItems.length === 0) {
+            state.pendingItems = state.originalItems.map((x) => ({ ...x }));
+            state.rankedItems = [state.pendingItems.shift()];
+          }
+          state.insertionHistory = [];
+          showScreen("insertion");
+          // Always start the insertion view at the top, with enough space below
+          // the fixed item-to-place card so the first ranked item never overlaps it.
+          window.scrollTo({ top: 0, behavior: "auto" });
+          nextInsertionStep();
+        }
+
+        function nextInsertionStep() {
+          if (state.pendingItems.length === 0 && !state.currentInsertionItem) {
+            state.items = [...state.rankedItems];
+            finishSorting();
+            return;
+          }
+
+          if (!state.currentInsertionItem && state.pendingItems.length > 0) {
+            state.currentInsertionItem = state.pendingItems.shift();
+          }
+
+          insertionActiveText.textContent = state.currentInsertionItem ? state.currentInsertionItem.text : "";
+
+          updateProgress();
+          renderVerticalLine();
+
+          passInsertionBtn.disabled = state.pendingItems.length === 0;
+          undoInsertionBtn.disabled = state.insertionHistory.length === 0;
+        }
+
+        function renderVerticalLine() {
+          verticalLine.innerHTML = "";
+
+          verticalLine.appendChild(createSlot(0));
+
+          state.rankedItems.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.className = "ranked-card";
+            card.dataset.id = item.id;
+            const textSpan = document.createElement("span");
+            textSpan.className = "rc-text";
+            textSpan.textContent = item.text;
+            card.appendChild(textSpan);
+            card.setAttribute("role", "button");
+            card.setAttribute("tabindex", "0");
+            card.setAttribute("aria-label", `Move ${item.text}`);
+
+            const moveItemHandler = () => pickUpRankedItem(index);
+            card.addEventListener("click", moveItemHandler);
+            card.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                moveItemHandler();
+              }
+            });
+
+            // Keep the card in its original position and place the rank
+            // absolutely to its left, so the existing card alignment is unchanged.
+            const row = document.createElement("div");
+            row.className = "insertion-ranked-row";
+
+            const rank = document.createElement("span");
+            rank.className = "insertion-rank";
+            rank.textContent = index + 1;
+            rank.setAttribute("aria-hidden", "true");
+
+            row.appendChild(rank);
+            row.appendChild(card);
+            verticalLine.appendChild(row);
+            verticalLine.appendChild(createSlot(index + 1));
+          });
+
+          refreshScoreDisplays();
+        }
+
+        function pickUpRankedItem(index) {
+          state.insertionHistory.push({
+            ranked: [...state.rankedItems],
+            pending: [...state.pendingItems],
+            current: state.currentInsertionItem,
+          });
+
+          const [picked] = state.rankedItems.splice(index, 1);
+          if (state.currentInsertionItem) {
+            state.pendingItems.unshift(state.currentInsertionItem);
+          }
+          state.currentInsertionItem = picked;
+          nextInsertionStep();
+        }
+
+        function createSlot(index) {
+          const slot = document.createElement("button");
+          slot.type = "button";
+          slot.className = "insertion-slot";
+          slot.setAttribute("aria-label", "Insert at position " + (index + 1));
+          slot.addEventListener("click", () => insertAt(index));
+          return slot;
+        }
+
+        function insertAt(index) {
+          state.insertionHistory.push({
+            ranked: [...state.rankedItems],
+            pending: [...state.pendingItems],
+            current: state.currentInsertionItem,
+          });
+
+          state.rankedItems.splice(index, 0, state.currentInsertionItem);
+          state.currentInsertionItem = null;
+          nextInsertionStep();
+        }
+
+        passInsertionBtn.addEventListener("click", () => {
+          if (state.pendingItems.length === 0 || !state.currentInsertionItem) return;
+
+          state.pendingItems.push(state.currentInsertionItem);
+          state.currentInsertionItem = state.pendingItems.shift();
+
+          nextInsertionStep();
+        });
+
+        undoInsertionBtn.addEventListener("click", () => {
+          if (state.insertionHistory.length === 0) return;
+          const last = state.insertionHistory.pop();
+          state.rankedItems = last.ranked;
+          state.pendingItems = last.pending;
+          state.currentInsertionItem = last.current;
+          nextInsertionStep();
+        });
+
+        // ---------- Results Screen ----------
+        function finishSorting() {
+          showScreen("results");
+          progressLabel.textContent = "";
+          progressFill.style.width = "100%";
+
+          const customTitle = rankingTitleEl.value.trim();
+          resultsTitle.textContent = customTitle ? customTitle : "Your ranking";
+
+          resultsList.innerHTML = "";
+          state.items.forEach((item, idx) => {
+            const li = document.createElement("li");
+            li.className = "result-item";
+            li.dataset.id = item.id;
+            li.style.animationDelay = (reduceMotion ? 0 : idx * 45) + "ms";
+            li.innerHTML = '<span class="rank">' + (idx + 1) + '</span><span class="text"></span>';
+            li.querySelector(".text").textContent = item.text;
+            resultsList.appendChild(li);
+          });
+          refreshScoreDisplays();
+          state.locked = false;
+        }
+
+        function csvField(v) {
+          const s = String(v);
+          return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+        }
+
+        function copyRanking(numbered, btnEl) {
+          const title = rankingTitleEl.value ? `${rankingTitleEl.value}\n\n` : "";
+          let text;
+
+          if (state.showScores) {
+            const scored = computeScores(state.items);
+            const rows = numbered ? ["rank,name,score"] : ["name,score"];
+            scored.forEach((d, idx) => {
+              const cols = numbered ? [idx + 1, csvField(d.item.text), formatScore(d.score)] : [csvField(d.item.text), formatScore(d.score)];
+              rows.push(cols.join(","));
+            });
+            text = rows.join("\n");
+          } else {
+            text = state.items.map((it, idx) => (numbered ? idx + 1 + ". " : "") + it.text).join("\n");
+          }
+
+          const fullText = title + text;
+
+          const original = btnEl.textContent;
+          navigator.clipboard.writeText(fullText).then(() => {
+            btnEl.textContent = "Copied!";
+            setTimeout(() => (btnEl.textContent = original), 1500);
+          });
+        }
+
+        copyNumberedBtn.addEventListener("click", () => copyRanking(true, copyNumberedBtn));
+        copyUnnumberedBtn.addEventListener("click", () => copyRanking(false, copyUnnumberedBtn));
+
+        restartBtn.addEventListener("click", () => {
+          resetProgress();
+          itemsInput.value = state.originalItems.map((i) => i.text).join("\n");
+          updateItemCount();
+          liveListEl.innerHTML = "";
+          setupError.textContent = "";
+          state.scoreAnchors = {};
+          state.showScores = false;
+          toggleScoresBtn.textContent = "Show scores";
+          toggleScoresBtn.setAttribute("aria-pressed", "false");
+          showScreen("setup");
+          itemsInput.focus();
+        });
+
+        // ---------- Init ----------
+        updateItemCount();
+        resetProgress();
+        showScreen("setup");
+      })();
+    </script>
+  </body>
+</html>
