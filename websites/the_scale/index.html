@@ -84,6 +84,7 @@
         font-family: "IBM Plex Mono", monospace;
         font-size: 0.78rem;
         letter-spacing: 0.18em;
+        flex-shrink: 0;
       }
       .brand svg {
         display: block;
@@ -93,17 +94,20 @@
         display: flex;
         align-items: center;
         gap: 1rem;
+        min-width: 0;
       }
       .progress-info {
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        min-width: 0;
       }
       .progress-label {
         font-family: "IBM Plex Mono", monospace;
         font-size: 0.72rem;
         color: var(--ink-dim);
         white-space: nowrap;
+        flex-shrink: 0;
       }
       .progress-track {
         width: 100px;
@@ -111,6 +115,7 @@
         background: rgba(243, 238, 220, 0.15);
         border-radius: 2px;
         overflow: hidden;
+        flex-shrink: 0;
       }
       .progress-fill {
         height: 100%;
@@ -124,6 +129,7 @@
         max-width: 720px;
         margin: 0 auto;
         padding: 4rem 1.5rem 5rem;
+        width: 100%;
       }
       .screen {
         display: none;
@@ -142,10 +148,26 @@
           transform: none;
         }
       }
+      /* The insertion screen has position:fixed children (the item-to-place card,
+     the bottom action bar). A CSS transform on an ancestor creates a new
+     containing block for fixed descendants, so animating transform here would
+     make them jump — briefly fixed to this box instead of the viewport.
+     Fade only, no transform, for this screen. */
+      #screen-insertion.active {
+        animation: screenInFade 360ms ease;
+      }
+      @keyframes screenInFade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
       /* ---------- setup ---------- */
       .setup-hero {
-        padding-top: 2rem;
+        padding-top: 0;
       }
       .setup-hero h1 {
         font-size: clamp(2rem, 5vw, 2.7rem);
@@ -154,6 +176,7 @@
         color: var(--ink-dim);
         font-size: 1.05rem;
         max-width: 46ch;
+        margin-bottom: 0;
       }
       .field-label {
         font-family: "IBM Plex Mono", monospace;
@@ -162,7 +185,7 @@
         text-transform: uppercase;
         color: var(--ink-dim);
         display: block;
-        margin: 2rem 0 0.6rem;
+        margin: 1.5rem 0 0.6rem;
       }
       input.title-input {
         width: 100%;
@@ -185,7 +208,7 @@
 
       textarea#itemsInput {
         width: 100%;
-        min-height: 180px;
+        min-height: 150px;
         resize: vertical;
         background: var(--bg-soft);
         border: 1px solid var(--line);
@@ -248,7 +271,7 @@
         margin-top: 0.9rem;
       }
       .setup-actions {
-        margin-top: 1.75rem;
+        margin-top: 1.4rem;
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
@@ -446,7 +469,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 180px; /* Clear the fixed header + item-to-place card */
+        padding-top: 92px; /* Clear only the item-to-place card — the header is already cleared by app-shell's own padding */
         padding-bottom: 90px; /* Offset for fixed bottom action bar */
       }
       .active-card-wrap {
@@ -796,16 +819,157 @@
         flex-wrap: wrap;
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: 640px) {
+        .app-shell {
+          padding-left: 1rem;
+          padding-right: 1rem;
+          padding-top: 3.5rem;
+        }
+        .topbar-inner {
+          padding: 0.6rem 1rem;
+          gap: 0.6rem;
+        }
+        .brand span {
+          display: none;
+        }
+        .header-actions {
+          gap: 0.55rem;
+        }
+        .progress-info {
+          gap: 0.5rem;
+        }
+        .progress-label {
+          font-size: 0.66rem;
+        }
+        .progress-track {
+          width: 52px;
+        }
+        .btn-sm {
+          padding: 0.4rem 0.7rem;
+          font-size: 0.7rem;
+        }
+        #globalHomeBtn {
+          padding: 0.4rem 0.6rem;
+        }
+
+        .setup-hero .lede {
+          font-size: 0.98rem;
+        }
+        .setup-actions {
+          gap: 0.6rem;
+        }
+        .setup-actions .btn {
+          flex: 1 1 auto;
+          text-align: center;
+        }
+
         .pans-row {
-          gap: 0.75rem;
+          gap: 0.6rem;
+        }
+        .pan-card {
+          padding: 0.9rem 0.6rem;
+          font-size: 1rem;
+          min-height: 80px;
         }
         .vs-mark {
-          padding-top: 2.2rem;
-          font-size: 0.65rem;
-        }
-        .setup-hero {
           padding-top: 2rem;
+          font-size: 0.62rem;
+        }
+
+        /* Rank numbers can't sit in the margin outside the vertical line on
+       narrow screens (there isn't one) — bring them inline instead. */
+        .insertion-ranked-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .insertion-rank {
+          position: static;
+          transform: none;
+          width: auto;
+          min-width: 1.6rem;
+          text-align: right;
+          font-size: 1.1rem;
+          flex-shrink: 0;
+        }
+        .active-card-wrap {
+          padding: 0.65rem 0.85rem;
+          top: 56px;
+        }
+        .active-card-text {
+          font-size: 1.02rem;
+        }
+        .insertion-container {
+          padding-top: 78px;
+        }
+
+        .insertion-actions-fixed {
+          padding: 0.65rem 0.8rem;
+          gap: 0.6rem;
+        }
+        .insertion-actions-fixed .btn {
+          padding: 0.6rem 0.9rem;
+          font-size: 0.82rem;
+          flex: 1 1 auto;
+          text-align: center;
+        }
+        .insertion-container {
+          padding-bottom: 110px;
+        }
+
+        .results-actions .btn {
+          flex: 1 1 auto;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .pans-row {
+          gap: 0.5rem;
+        }
+        .vs-mark {
+          padding-top: 1.8rem;
+          font-size: 0.58rem;
+        }
+        .pan-card {
+          font-size: 0.92rem;
+          padding: 0.8rem 0.5rem;
+        }
+        .field-label {
+          margin: 1.15rem 0 0.5rem;
+        }
+        textarea#itemsInput {
+          min-height: 130px;
+        }
+        .setup-actions {
+          margin-top: 1.1rem;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .topbar-inner {
+          flex-wrap: wrap;
+          row-gap: 0.4rem;
+        }
+        .progress-label {
+          display: none;
+        }
+        .progress-track {
+          width: 40px;
+        }
+        .header-actions {
+          gap: 0.4rem;
+        }
+        /* Safety net: if the header ever wraps to two lines at this width,
+       give the fixed elements below it a little extra clearance. */
+        .app-shell {
+          padding-top: 5.2rem;
+        }
+        .active-card-wrap {
+          top: 88px;
+        }
+        .insertion-container {
+          padding-top: 84px;
         }
       }
 
@@ -931,7 +1095,6 @@
 
           <div class="insertion-actions-fixed">
             <button type="button" class="btn btn-ghost" id="passInsertionBtn">Pass (do later)</button>
-            <button type="button" class="btn btn-ghost" id="undoInsertionBtn" disabled>Undo last placement</button>
             <button type="button" class="btn btn-ghost" id="saveSessionBtnInsertion">💾 Export Progress</button>
           </div>
         </div>
@@ -1010,7 +1173,6 @@
 
         const insertionActiveText = document.getElementById("insertionActiveText");
         const verticalLine = document.getElementById("verticalLine");
-        const undoInsertionBtn = document.getElementById("undoInsertionBtn");
         const passInsertionBtn = document.getElementById("passInsertionBtn");
 
         const saveSessionBtn = document.getElementById("saveSessionBtn");
@@ -1616,6 +1778,7 @@
           progressInfo.hidden = !isSortingActive;
           globalHomeBtn.style.display = name === "setup" ? "none" : "inline-block";
           toggleScoresBtn.style.display = name === "setup" ? "none" : "inline-block";
+          window.scrollTo({ top: 0, behavior: "auto" });
         }
 
         function resetProgress() {
@@ -1874,7 +2037,6 @@
           renderVerticalLine();
 
           passInsertionBtn.disabled = state.pendingItems.length === 0;
-          undoInsertionBtn.disabled = state.insertionHistory.length === 0;
         }
 
         function renderVerticalLine() {
@@ -1964,15 +2126,6 @@
           state.pendingItems.push(state.currentInsertionItem);
           state.currentInsertionItem = state.pendingItems.shift();
 
-          nextInsertionStep();
-        });
-
-        undoInsertionBtn.addEventListener("click", () => {
-          if (state.insertionHistory.length === 0) return;
-          const last = state.insertionHistory.pop();
-          state.rankedItems = last.ranked;
-          state.pendingItems = last.pending;
-          state.currentInsertionItem = last.current;
           nextInsertionStep();
         });
 
