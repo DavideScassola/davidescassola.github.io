@@ -154,9 +154,9 @@
     },
     {
       "name": "A Sobering Look at Tabular Data Generation via Probabilistic Circuits",
-      "publisher": "Arxiv",
+      "publisher": "UAI",
       "releaseDate": "2026",
-      "url": "https://arxiv.org/abs/2603.23016",
+      "url": "https://proceedings.mlr.press/v337/scassola26a.html",
       "summary": "We develop a tabular data generation method using probabilistic circuits, which are tractable models allowing exact probabilistic queries. Moreover, we show the limitations of widely used evaluation metrics for tabular data generation and advocate for alternative approaches."
     },
     {
