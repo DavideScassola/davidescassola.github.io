@@ -39,6 +39,8 @@
         font-family: "Inter", sans-serif;
         line-height: 1.55;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
       h1,
       h2,
@@ -128,8 +130,9 @@
       .app-shell {
         max-width: 720px;
         margin: 0 auto;
-        padding: 4rem 1.5rem 5rem;
+        padding: 4rem 1.5rem 2rem;
         width: 100%;
+        flex: 1;
       }
       .screen {
         display: none;
@@ -148,11 +151,7 @@
           transform: none;
         }
       }
-      /* The insertion screen has position:fixed children (the item-to-place card,
-     the bottom action bar). A CSS transform on an ancestor creates a new
-     containing block for fixed descendants, so animating transform here would
-     make them jump — briefly fixed to this box instead of the viewport.
-     Fade only, no transform, for this screen. */
+
       #screen-insertion.active {
         animation: screenInFade 360ms ease;
       }
@@ -469,8 +468,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 92px; /* Clear only the item-to-place card — the header is already cleared by app-shell's own padding */
-        padding-bottom: 90px; /* Offset for fixed bottom action bar */
+        padding-top: 92px;
+        padding-bottom: 90px;
       }
       .active-card-wrap {
         position: fixed;
@@ -792,6 +791,11 @@
         gap: 1.1rem;
         padding: 0.85rem 0;
         border-bottom: 1px solid var(--line);
+        opacity: 1;
+        transform: none;
+        transition: box-shadow 150ms ease;
+      }
+      .result-item.animated {
         opacity: 0;
         transform: translateY(8px);
         animation: resultIn 420ms ease forwards;
@@ -801,6 +805,19 @@
           opacity: 1;
           transform: none;
         }
+      }
+      .result-item[draggable="true"] {
+        cursor: grab;
+        user-select: none;
+      }
+      .result-item[draggable="true"]:active {
+        cursor: grabbing;
+      }
+      .result-item.drag-over-top {
+        box-shadow: inset 0 2px 0 var(--brass-bright);
+      }
+      .result-item.drag-over-bottom {
+        box-shadow: inset 0 -2px 0 var(--brass-bright);
       }
       .result-item .rank {
         font-family: "Fraunces", serif;
@@ -817,6 +834,138 @@
         display: flex;
         gap: 0.85rem;
         flex-wrap: wrap;
+      }
+
+      /* ---------- modal ---------- */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+        background: rgba(15, 25, 24, 0.8);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease;
+      }
+      .modal-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-box {
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 480px;
+        padding: 1.5rem;
+        color: var(--ink);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+        transform: translateY(12px);
+        transition: transform 200ms ease;
+      }
+      .modal-backdrop.active .modal-box {
+        transform: translateY(0);
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+      }
+      .modal-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--ink-dim);
+        font-size: 1.5rem;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 0.4rem;
+        border-radius: 4px;
+      }
+      .modal-close:hover {
+        color: var(--ink);
+      }
+
+      .export-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        background: rgba(0, 0, 0, 0.18);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        user-select: none;
+      }
+      .checkbox-label input[type="checkbox"] {
+        width: 1.1rem;
+        height: 1.1rem;
+        accent-color: var(--brass-bright);
+        cursor: pointer;
+      }
+      textarea.export-preview {
+        width: 100%;
+        height: 140px;
+        resize: vertical;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--ink);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.85rem;
+        padding: 0.75rem;
+        margin-top: 0.4rem;
+        line-height: 1.45;
+        white-space: pre;
+      }
+      textarea.export-preview:focus {
+        outline: none;
+        border-color: var(--brass);
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- footer ---------- */
+      .app-footer {
+        text-align: center;
+        padding: 2rem 1.5rem 1.5rem;
+        color: var(--ink-dim);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--line);
+        margin-top: 3rem;
+      }
+      .app-footer a {
+        color: var(--brass-bright);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 160ms ease;
+      }
+      .app-footer a:hover {
+        color: var(--brass);
       }
 
       @media (max-width: 640px) {
@@ -876,8 +1025,6 @@
           font-size: 0.62rem;
         }
 
-        /* Rank numbers can't sit in the margin outside the vertical line on
-       narrow screens (there isn't one) — bring them inline instead. */
         .insertion-ranked-row {
           display: flex;
           align-items: center;
@@ -960,8 +1107,6 @@
         .header-actions {
           gap: 0.4rem;
         }
-        /* Safety net: if the header ever wraps to two lines at this width,
-       give the fixed elements below it a little extra clearance. */
         .app-shell {
           padding-top: 5.2rem;
         }
@@ -1107,12 +1252,48 @@
         </div>
         <ol id="resultsList"></ol>
         <div class="results-actions">
-          <button type="button" class="btn btn-primary" id="copyNumberedBtn">Copy with numbers</button>
-          <button type="button" class="btn btn-primary" id="copyUnnumberedBtn">Copy without numbers</button>
+          <button type="button" class="btn btn-primary" id="openExportBtn">Export</button>
           <button type="button" class="btn btn-ghost" id="restartBtn">Start over</button>
         </div>
       </main>
     </div>
+
+    <!-- EXPORT MODAL -->
+    <div class="modal-backdrop" id="exportModal" aria-hidden="true">
+      <div class="modal-box" role="dialog" aria-labelledby="exportModalTitle" aria-modal="true">
+        <div class="modal-header">
+          <h3 id="exportModalTitle">Export Ranking</h3>
+          <button type="button" class="modal-close" id="closeExportModalBtn" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="export-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="exportRankNum" checked />
+              <span>Include rank number</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="exportScore" />
+              <span>Include score</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="exportCsv" />
+              <span>CSV format</span>
+            </label>
+          </div>
+
+          <label class="field-label" for="exportPreview" style="margin-top: 0">Preview</label>
+          <textarea id="exportPreview" class="export-preview" readonly></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="copyExportBtn">Copy to clipboard</button>
+          <button type="button" class="btn btn-ghost" id="downloadExportBtn">Download file</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <p>© <a href="https://davidescassola.github.io/" target="_blank" rel="noopener">Davide Scassola</a>, 2026</p>
+    </footer>
 
     <script>
       (function () {
@@ -1182,9 +1363,17 @@
 
         const resultsTitle = document.getElementById("resultsTitle");
         const resultsList = document.getElementById("resultsList");
-        const copyNumberedBtn = document.getElementById("copyNumberedBtn");
-        const copyUnnumberedBtn = document.getElementById("copyUnnumberedBtn");
+        const openExportBtn = document.getElementById("openExportBtn");
         const restartBtn = document.getElementById("restartBtn");
+
+        const exportModal = document.getElementById("exportModal");
+        const closeExportModalBtn = document.getElementById("closeExportModalBtn");
+        const exportRankNum = document.getElementById("exportRankNum");
+        const exportScore = document.getElementById("exportScore");
+        const exportCsv = document.getElementById("exportCsv");
+        const exportPreview = document.getElementById("exportPreview");
+        const copyExportBtn = document.getElementById("copyExportBtn");
+        const downloadExportBtn = document.getElementById("downloadExportBtn");
 
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const ANIM_MS = reduceMotion ? 0 : 420;
@@ -1331,15 +1520,18 @@
               recordDecisionSwap(pair, d);
               state.current = state.gen.next(d);
             }
-            showScreen("compare");
-            renderCompareContent();
-            renderLiveList(null);
+            if (state.current.done) {
+              finishSorting();
+            } else {
+              showScreen("compare");
+              renderCompareContent();
+              renderLiveList(null);
+            }
           }
         }
 
         saveSessionBtn.addEventListener("click", saveToFile);
         saveSessionBtnInsertion.addEventListener("click", saveToFile);
-
         setupLoadFileBtn.addEventListener("click", () => fileInput.click());
         fileInput.addEventListener("change", (e) => {
           const file = e.target.files[0];
@@ -1805,7 +1997,6 @@
           toggleScoresBtn.textContent = "Show scores";
           toggleScoresBtn.setAttribute("aria-pressed", "false");
 
-          // Reset Insertion Mode state for fresh runs
           state.rankedItems = [];
           state.pendingItems = [];
           state.currentInsertionItem = null;
@@ -2014,8 +2205,6 @@
           }
           state.insertionHistory = [];
           showScreen("insertion");
-          // Always start the insertion view at the top, with enough space below
-          // the fixed item-to-place card so the first ranked item never overlaps it.
           window.scrollTo({ top: 0, behavior: "auto" });
           nextInsertionStep();
         }
@@ -2041,7 +2230,6 @@
 
         function renderVerticalLine() {
           verticalLine.innerHTML = "";
-
           verticalLine.appendChild(createSlot(0));
 
           state.rankedItems.forEach((item, index) => {
@@ -2065,8 +2253,6 @@
               }
             });
 
-            // Keep the card in its original position and place the rank
-            // absolutely to its left, so the existing card alignment is unchanged.
             const row = document.createElement("div");
             row.className = "insertion-ranked-row";
 
@@ -2130,6 +2316,84 @@
         });
 
         // ---------- Results Screen ----------
+        function renderResultsList(animate = false) {
+          resultsList.innerHTML = "";
+
+          state.items.forEach((item, idx) => {
+            const li = document.createElement("li");
+            li.className = animate ? "result-item animated" : "result-item";
+            li.dataset.id = item.id;
+
+            li.draggable = true;
+            if (animate) {
+              li.style.animationDelay = (reduceMotion ? 0 : idx * 45) + "ms";
+            }
+
+            li.innerHTML = '<span class="rank">' + (idx + 1) + '</span><span class="text"></span>';
+            li.querySelector(".text").textContent = item.text;
+
+            // Native Drag and Drop Logic
+            li.addEventListener("dragstart", (e) => {
+              li.style.opacity = "0.4";
+              e.dataTransfer.effectAllowed = "move";
+              e.dataTransfer.setData("text/plain", idx);
+            });
+
+            li.addEventListener("dragend", () => {
+              li.style.opacity = "1";
+              const overItems = resultsList.querySelectorAll(".drag-over-top, .drag-over-bottom");
+              overItems.forEach((el) => el.classList.remove("drag-over-top", "drag-over-bottom"));
+            });
+
+            li.addEventListener("dragover", (e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              const bounding = li.getBoundingClientRect();
+              const offset = bounding.y + bounding.height / 2;
+              if (e.clientY - offset > 0) {
+                li.classList.add("drag-over-bottom");
+                li.classList.remove("drag-over-top");
+              } else {
+                li.classList.add("drag-over-top");
+                li.classList.remove("drag-over-bottom");
+              }
+            });
+
+            li.addEventListener("dragleave", () => {
+              li.classList.remove("drag-over-top", "drag-over-bottom");
+            });
+
+            li.addEventListener("drop", (e) => {
+              e.preventDefault();
+              li.classList.remove("drag-over-top", "drag-over-bottom");
+              const dragSourceIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+
+              if (isNaN(dragSourceIndex) || dragSourceIndex === idx) return;
+
+              const bounding = li.getBoundingClientRect();
+              const offset = bounding.y + bounding.height / 2;
+              let dropTargetIndex = idx;
+
+              if (e.clientY - offset > 0) {
+                dropTargetIndex++;
+              }
+
+              if (dragSourceIndex < dropTargetIndex) {
+                dropTargetIndex--;
+              }
+
+              const [movedItem] = state.items.splice(dragSourceIndex, 1);
+              state.items.splice(dropTargetIndex, 0, movedItem);
+
+              renderResultsList(false);
+            });
+
+            resultsList.appendChild(li);
+          });
+
+          refreshScoreDisplays();
+        }
+
         function finishSorting() {
           showScreen("results");
           progressLabel.textContent = "";
@@ -2138,52 +2402,108 @@
           const customTitle = rankingTitleEl.value.trim();
           resultsTitle.textContent = customTitle ? customTitle : "Your ranking";
 
-          resultsList.innerHTML = "";
-          state.items.forEach((item, idx) => {
-            const li = document.createElement("li");
-            li.className = "result-item";
-            li.dataset.id = item.id;
-            li.style.animationDelay = (reduceMotion ? 0 : idx * 45) + "ms";
-            li.innerHTML = '<span class="rank">' + (idx + 1) + '</span><span class="text"></span>';
-            li.querySelector(".text").textContent = item.text;
-            resultsList.appendChild(li);
-          });
-          refreshScoreDisplays();
+          renderResultsList(true);
           state.locked = false;
         }
 
+        // ---------- Export Modal Logic ----------
         function csvField(v) {
           const s = String(v);
           return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
         }
 
-        function copyRanking(numbered, btnEl) {
-          const title = rankingTitleEl.value ? `${rankingTitleEl.value}\n\n` : "";
-          let text;
+        function generateExportText() {
+          const incRank = exportRankNum.checked;
+          const incScore = exportScore.checked;
+          const isCsv = exportCsv.checked;
+          const title = rankingTitleEl.value.trim();
 
-          if (state.showScores) {
-            const scored = computeScores(state.items);
-            const rows = numbered ? ["rank,name,score"] : ["name,score"];
+          const scored = computeScores(state.items);
+
+          if (isCsv) {
+            const headers = [];
+            if (incRank) headers.push("rank");
+            headers.push("name");
+            if (incScore) headers.push("score");
+
+            const rows = [headers.join(",")];
             scored.forEach((d, idx) => {
-              const cols = numbered ? [idx + 1, csvField(d.item.text), formatScore(d.score)] : [csvField(d.item.text), formatScore(d.score)];
-              rows.push(cols.join(","));
+              const row = [];
+              if (incRank) row.push(idx + 1);
+              row.push(csvField(d.item.text));
+              if (incScore) row.push(formatScore(d.score));
+              rows.push(row.join(","));
             });
-            text = rows.join("\n");
+            return rows.join("\n");
           } else {
-            text = state.items.map((it, idx) => (numbered ? idx + 1 + ". " : "") + it.text).join("\n");
+            const lines = [];
+            if (title) lines.push(title);
+
+            scored.forEach((d, idx) => {
+              let line = "";
+              if (incRank) line += idx + 1 + ": ";
+              line += d.item.text;
+              if (incScore) line += ` (${formatScore(d.score)})`;
+              lines.push(line);
+            });
+            return lines.join("\n");
           }
-
-          const fullText = title + text;
-
-          const original = btnEl.textContent;
-          navigator.clipboard.writeText(fullText).then(() => {
-            btnEl.textContent = "Copied!";
-            setTimeout(() => (btnEl.textContent = original), 1500);
-          });
         }
 
-        copyNumberedBtn.addEventListener("click", () => copyRanking(true, copyNumberedBtn));
-        copyUnnumberedBtn.addEventListener("click", () => copyRanking(false, copyUnnumberedBtn));
+        function updateExportPreview() {
+          exportPreview.value = generateExportText();
+        }
+
+        function openExportModal() {
+          exportScore.checked = state.showScores;
+          updateExportPreview();
+          exportModal.classList.add("active");
+          exportModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeExportModal() {
+          exportModal.classList.remove("active");
+          exportModal.setAttribute("aria-hidden", "true");
+        }
+
+        openExportBtn.addEventListener("click", openExportModal);
+        closeExportModalBtn.addEventListener("click", closeExportModal);
+        exportModal.addEventListener("click", (e) => {
+          if (e.target === exportModal) closeExportModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && exportModal.classList.contains("active")) {
+            closeExportModal();
+          }
+        });
+
+        exportRankNum.addEventListener("change", updateExportPreview);
+        exportScore.addEventListener("change", updateExportPreview);
+        exportCsv.addEventListener("change", updateExportPreview);
+
+        copyExportBtn.addEventListener("click", () => {
+          const text = exportPreview.value;
+          const original = copyExportBtn.textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            copyExportBtn.textContent = "Copied!";
+            setTimeout(() => (copyExportBtn.textContent = original), 1500);
+          });
+        });
+
+        downloadExportBtn.addEventListener("click", () => {
+          const text = exportPreview.value;
+          const isCsv = exportCsv.checked;
+          const ext = isCsv ? "csv" : "txt";
+          const mime = isCsv ? "text/csv" : "text/plain";
+          const blob = new Blob([text], { type: mime });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `ranking-export.${ext}`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
 
         restartBtn.addEventListener("click", () => {
           resetProgress();
