@@ -17,12 +17,20 @@
   },
   "work": [
     {
+      "name": "Freelance",
+      "location": "Gavardo, Italy",
+      "position": "AI Scientist",
+      "startDate": "2026-07-01",
+      "endDate": "",
+      "summary": "Freelance AI engineer, currently working on voice agents."
+    },
+    {
       "name": "Aindo SpA",
       "location": "Trieste, Italy",
       "url": "https://www.aindo.com",
       "position": "Research Scientist",
       "startDate": "2023-01-01",
-      "endDate": "2023-05-31",
+      "endDate": "2026-05-31",
       "summary": "Researcher on generative models for synthetic data generation."
     },
     {
